@@ -1,0 +1,25 @@
+digraph G{
+  rankdir=LR;
+  node [shape = doublecircle];CF;
+  node [shape = circle];
+  AD [color = "#808080"];
+  AD -> BD   [label = "a"];
+  AD -> AE   [label = "b"];
+  AE -> BE   [label = "a"];
+  AE -> AF   [label = "b"];
+  AF -> BF   [label = "a"];
+  AF -> AF:s [label = "b"];
+
+  BD -> CD   [label = "a"];
+  BD -> BE   [label = "b"];
+  BE -> CE   [label = "a"];
+  BE -> BF   [label = "b"];
+  BF -> CF   [label = "a"];
+  BF -> BF:s   [label = "b"];
+
+  CD -> CD   [label = "a"];
+  CD -> CE   [label = "b"];
+  CE -> CE   [label = "a"];
+  CE -> CF   [label = "b"];
+  CF -> CF   [label = "a, b"];
+}

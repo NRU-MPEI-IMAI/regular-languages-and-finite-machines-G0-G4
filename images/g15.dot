@@ -1,0 +1,18 @@
+digraph G{
+  rankdir=LR;
+  K, J, G, I, H [shape = doublecircle];
+  F [color = "#808080", shape = circle];
+  F -> G [label = "a"];
+  F -> K [label = "b"];
+  K -> H:n [label = "a"];
+  K -> J [label = "b"];
+  J -> I [label = "a"];
+  J -> F [label = "b"];
+
+  G -> F [label = "a"];
+  G -> H [label = "b"];
+  H -> K [label = "a"];
+  H -> I [label = "b"];
+  I -> J [label = "a"];
+  I -> G [label = "b"];
+}
