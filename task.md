@@ -1,10 +1,11 @@
 # Задание 1
-1.
+1. 
 $$
 L = \{\omega \in \{a, b, c\}^*\mid |\omega|_c = 1 \}
 $$
 ![FSA1](./images/f1.png)
-2.
+
+2. 
 $$
 L = \{\omega \in \{a, b\}^* \mid |\omega|_a \leq 2,|\omega|_b \geq 2 \}
 $$
@@ -26,7 +27,8 @@ xy &=&a^ia^j, \quad i + j \leq n\\
 \omega &=& a^ia^{jk}a^{n - i - j}b^n \notin \overline L \quad ,k > 1
 \end{array}
 $$
-4.
+
+4. 
 $$
 L = \{\omega \in \{a, b\}^* \mid \omega\omega = \omega\omega\omega \}
 $$
@@ -126,8 +128,10 @@ $$
   \end{array}
 $$
 ![FSA12](./images/f12.png)
+
 4. $L_4 = \overline L_3$
 ![FSA13](./images/f13.png)
+
 5. $L_5 = L_2 \setminus L_3 = L_2 \cap L_4$
 ![FSA14](./images/f14.png)
 ![FSA15](./images/f15.png)
