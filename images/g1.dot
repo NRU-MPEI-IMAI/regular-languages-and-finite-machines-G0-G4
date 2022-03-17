@@ -2,6 +2,7 @@ digraph G{
   rankdir=LR;
   node [shape = doublecircle]; 2;
   node [shape = circle];
+  1 [color = "#808080"];
   1 -> 2 [label = "c"];
   1 -> 1 [label = "a, b"];
   2 -> 2 [label = "a, b"];
