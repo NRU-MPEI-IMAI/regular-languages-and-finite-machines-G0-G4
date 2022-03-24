@@ -36,13 +36,8 @@
     ![FSA3](./images/f3.png)
 
 # Задание 2
-1. 
-
-    $$
-    L_1 = \{\omega \in \{a, b\}^* \mid |\omega|_a \geq 2 \and |\omega|_b \geq 2 \} \\
-    L_1 = \{\omega \in \{a, b\}^* \mid |\omega|_a \geq 2\} \cap
-      \{\omega \in \{a, b\}^* \mid |\omega|_b \geq 2\}
-    $$
+1.	$L_1 = \{\omega \in \{a, b\}^* \mid |\omega|_a \geq 2 \and |\omega|_b \geq 2 \}$
+    $L_1 = \{\omega \in \{a, b\}^* \mid |\omega|_a \geq 2\} \cap \{\omega \in \{a, b\}^* \mid |\omega|_b \geq 2\}$
     ![FSA4](./images/f4.png)
     ![FSA5](./images/f5.png)
     $$
@@ -65,13 +60,8 @@
     $$
     ![FSA6](./images/f6.png)
 
-2. 
-
-    $$
-    L_2 = \{\omega \in \{a, b\}^* \mid |\omega| \geq 3 \and |\omega| нечетно \} \\
-    L_2 = \{\omega \in \{a, b\}^* \mid |\omega| \geq 3\} \cap
-    \{\omega \in \{a, b\}^* \mid |\omega| нечетно\}
-    $$
+2.	$ L_2 = \{\omega \in \{a, b\}^* \mid |\omega| \geq 3 \and |\omega| нечетно \}$ 
+    $L_2 = \{\omega \in \{a, b\}^* \mid |\omega| \geq 3\} \cap \{\omega \in \{a, b\}^* \mid |\omega| нечетно\}$
     ![FSA7](./images/f7.png)
     ![FSA8](./images/f8.png)
     $$
@@ -88,7 +78,7 @@
     \delta(AE, b) = BF & \delta(CE, b) = DF \\
     \delta(AF, a) = BE & \delta(CF, a) = DE \\
     \delta(AF, b) = BE & \delta(CF, b) = DE \\
-
+    
     \delta(BE, a) = CF & \delta(DE, a) = DF \\
     \delta(BE, b) = CF & \delta(DE, b) = DF \\
     \delta(BF, a) = CE & \delta(DF, a) = DE \\
@@ -100,13 +90,8 @@
 
     Верхняя ветвь может быть удалена, т.к. ее вершины недостежимы
 
-3. 
-
-    $$
-    L_1 = \{\omega \in \{a, b\}^* \mid |\omega|_a четно \and |\omega|_b \spaceкратно\spaceтрем \} \\
-      L_1 = \{\omega \in \{a, b\}^* \mid |\omega|_a четно\} \cap
-      \{\omega \in \{a, b\}^* \mid |\omega|_b \spaceкратно\spaceтрем\}
-    $$
+3.	$L_1 = \{\omega \in \{a, b\}^* \mid |\omega|_a четно \and |\omega|_b \spaceкратно\spaceтрем \}$
+    $L_1 = \{\omega \in \{a, b\}^* \mid |\omega|_a четно\} \cap \{\omega \in \{a, b\}^* \mid |\omega|_b \spaceкратно\spaceтрем\}$
     ![FSA10](./images/f10.png)
     ![FSA11](./images/f11.png)
     $$
@@ -117,6 +102,7 @@
     T &=& AC
     \end{array}
     $$
+    
     $$
     \begin{array}{lll}
     \delta(AC, a) = BC & \delta(BC, a) = AC \\
@@ -128,7 +114,7 @@
     \end{array}
     $$
     ![FSA12](./images/f12.png)
-
+    
 4.	$L_4 = \overline L_3$
     ![FSA13](./images/f13.png)
 
