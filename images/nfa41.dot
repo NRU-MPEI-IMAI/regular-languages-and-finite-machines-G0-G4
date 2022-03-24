@@ -1,0 +1,15 @@
+digraph G{
+  rankdir=LR;
+  10 [shape = doublecircle];
+  1 [ color = "#808080", shape = circle];
+  node [shape = circle];
+  1 -> 2, 5  [label = "λ"];
+  2 -> 3 [label = "a"];
+  3 -> 4 [label = "b"];
+  5 -> 6 [label = "a"];
+  6 -> 7 [label = "b"];
+  7 -> 8 [label = "a"];
+  4 -> 9 [label = "λ"];
+  8 -> 9 [label = "λ"];
+  9 -> 10 [label = "a"];
+}

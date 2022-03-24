@@ -1,0 +1,11 @@
+digraph G{
+  rankdir=LR;
+  "{3, 6, 10}", "{8, 3, 6, 10}" [shape = doublecircle];
+  1 [ color = "#808080", shape = circle];
+  node [shape = circle];
+  1 -> "{3, 6, 10}"  [label = "a"];
+  "{3, 6, 10}" -> "{4, 7}" [label = "b"];
+  "{4, 7}" -> "{8, 3, 6, 10}" [label = "a"];
+  "{8, 3, 6, 10}" -> "{4, 7}" [label = "b"];
+  "{8, 3, 6, 10}" -> "{3, 6, 10}" [label = "a"];
+}
