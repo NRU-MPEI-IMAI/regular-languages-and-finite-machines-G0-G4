@@ -12,4 +12,13 @@ digraph G{
   4 -> 9 [label = "λ"];
   8 -> 9 [label = "λ"];
   9 -> 10 [label = "a"];
+  1 -> 9 [label = "λ"];
+  9 -> 1 [label = "λ"];
+  {rank = same; 2, 5}
+  {rank = same; 3, 6}
+  {rank = same; 4, 7}
+  {rank = same; 8, 9}
+
+
+
 }
