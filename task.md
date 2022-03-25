@@ -310,3 +310,50 @@
     {11,2,5},{1,11,3},{10,11,2,6},{11,2,6},{1,11,4,8},{1,11,4},{10,11,2},{1,11,3,7},{11,2,9},{11,2,5,9} - 9
     
     ![DFA45min](./images/dfa45min.png)
+    
+# Задание 4
+
+1.	$L = \{(aab)^nb(aba)^m \mid n ≥ 0, m ≥ 0\}$
+    ![fa51](./images/fa51.png)
+
+2.	$L = \{uaav \mid u ∈ \{a, b\}^∗, v ∈ \{a, b\}^∗, |u|_b ≥ |v|_a\}$
+    $$
+    \omega = b^naaa^n, |\omega| \geq  n \\
+    \omega = xyz\\
+    x = b^i \quad y=b^j \quad i + j \leq n \quad j > 0 \\
+    z = b^{n-i-j}aaa^n \\
+    |xy| \leq n \quad |y| > 0 \\
+    xy^0z = b^ib^{n-i-j}aaa^n = b^{n-j}aaa^n\notin L
+    $$
+
+3.	$L = \{a^mw \mid w ∈ \{a, b\}^∗, 1 ≤ |w|_b ≤ m\}$
+    $$
+    \omega = a^nb^n , |\omega| \geq  n \\
+    \omega = xyz \\
+    x = a^i \quad y = a^j \quad i+j \leq n \quad j > 0 \\
+    z = a^{n-i-j}b^n \\
+    |xy| \leq n \quad |y| > 0 \\
+    xy^0z = a^ia^{n-i-j}b^n = a^{n-j}b^n \notin L
+    $$
+    
+4.	$L = \{a^kb^ma^n \mid k = n ∨ m > 0\}$
+
+    $$
+    \omega = a^nba^n , |\omega| \geq  n \\
+    \omega = xyz \\
+    x = a^i \quad y = a^j \quad i+j \leq n \quad j > 0 \\
+    z = a^{n-i-j}ba^n \\
+    |xy| \leq n \quad |y| > 0 \\
+    xy^kz = a^ia^{jk}a^{n-i-j}ba^n = a^{n-j(k-1)}ba^n \notin L \quad \forall k > 1
+    $$
+
+5.	$L = \{ucv \mid u ∈ \{a, b\}^∗, v ∈ \{a, b\}^∗, u \neq v^R\}$
+
+    $$
+    \omega = (ab)^nc(ba)^n = \alpha_1\alpha_2...\alpha_{4n+1}, |\omega| \geq n \\
+    \omega = xyz \\
+    x = \alpha_1\alpha_2...\alpha_i \quad y=\alpha_{i+1}\alpha_{i+2}...\alpha_{i+j} \quad i+j \leq n \quad j > 0\\
+    z = \alpha_{i+j+1}\alpha_{i+j+2}...\alpha_{2n}c(ba)^n \\
+    |xy| \leq n \quad |y| > 0 \\
+    xy^kz = \alpha_1...\alpha_i(\alpha_{i+1}...\alpha_{i+j})^k\alpha_{i+j+1}...\alpha_{2n}c(ba)^n \notin L \quad \forall k > 1\\
+    $$
