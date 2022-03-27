@@ -1,4 +1,6 @@
-from collections import defaultdict
+from collections import defaultdict, deque
+
+from torch import ne
 
 
 class Automat:
@@ -54,3 +56,19 @@ class Automat:
             all_new_connections[state].update(new_connections[state])
         self.transitions = all_new_connections
         return self.transitions, self.final_states
+
+    def __dfa_connection(self, states):
+        '''
+        combines connection from set of states
+        '''
+
+        new_connections = defaultdict(lambda: defaultdict(set))
+        new_state = frozenset(states)
+        new_connections[new_state]
+        for state in states:
+            if state not in self.transitions:
+                continue
+            for connection in self.transitions[state]:
+                new_connections[new_state][connection].update(
+                    self.transitions[state][connection])
+        return new_connections

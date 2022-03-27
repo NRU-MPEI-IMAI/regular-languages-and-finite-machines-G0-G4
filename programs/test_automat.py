@@ -105,6 +105,36 @@ class TestAutomat(unittest.TestCase):
             (right_c_transitions, {'1', '2', '3', '4'}),
             (to_dict(c_transitions), c_finals))
 
+    def test_dfa_connection(self):
+        '''
+        a:
+        +--------+--+
+        b  a     |  a
+        v  v     |  v
+        2  3     4  5
+        ^  ^     ^  ^
+        a  a     a  a
+        +--+--1--+--+
+        '''
+
+        a = Automat(
+            alphabet={'a', 'b'},
+            states={'1', '2', '3', '4', '5'},
+            transitions={
+                '1': {'a': {'2', '3', '4'}, 'b':'3'},
+                '4': {'a': {'3', '5'}, 'b': '2'}
+            },
+            initial_state='1',
+            final_states={'5'}
+        )
+
+        right_a14 = {frozenset({'4', '1'}):{
+            'a':{'3', '4', '2', '5'},
+            'b':{'2', '3'}}}
+
+        right_a235 = {frozenset({'2', '3', '5'}):{}}
+        self.assertDictEqual(right_a14, a._Automat__dfa_connection({'1', '4'}))
+        self.assertDictEqual(right_a235, a._Automat__dfa_connection({'2', '3', '5'}))
 
 if __name__ == '__main__':
     unittest.main()
