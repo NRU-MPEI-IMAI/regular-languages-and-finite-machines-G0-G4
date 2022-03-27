@@ -1,7 +1,5 @@
 from collections import defaultdict, deque
 
-from torch import ne
-
 
 class Automat:
     '''
@@ -93,17 +91,17 @@ class Automat:
         for state in self.final_states:
             new_state = ','.join(sorted(list(state)))
             final_states.add(new_state)
-        
+
         self.transitions = transitions
         self.final_states = final_states
-        
+
     def to_dfa(self):
         '''
         makes automat deterministic
         '''
 
         self.remove_lambda_connections()
-        queue  = deque()
+        queue = deque()
         visited = set()
         self.initial_state = frozenset(self.initial_state)
         queue.append(self.initial_state)
