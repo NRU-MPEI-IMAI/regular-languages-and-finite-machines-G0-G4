@@ -72,3 +72,31 @@ class Automat:
                 new_connections[new_state][connection].update(
                     self.transitions[state][connection])
         return new_connections
+
+    def to_dfa(self):
+        '''
+        makes automat deterministic
+        '''
+
+        self.remove_lambda_connections()
+        queue  = deque()
+        visited = set()
+        self.initial_state = frozenset(self.initial_state)
+        queue.append(self.initial_state)
+        new_connections = {}
+        new_final_states = set()
+        while queue:
+            state = queue.popleft()
+            connections = self.__dfa_connection(state)
+            new_state = list(connections.keys())[0]
+            new_connections.update(connections)
+            for connection in connections[new_state]:
+                state = frozenset(connections[new_state][connection])
+                if state not in visited:
+                    queue.append(state)
+                    visited.add(state)
+                    if self.final_states & state:
+                        new_final_states.add(state)
+        self.transitions = new_connections
+        self.final_states = new_final_states
+        return new_connections, new_final_states
