@@ -73,6 +73,32 @@ class Automat:
                     self.transitions[state][connection])
         return new_connections
 
+    def stringify(self):
+        '''
+        transforms states in transitions dict to stirngs
+        transforms final states to string
+        '''
+        transitions = {}
+        final_states = set()
+        for state in self.transitions:
+            for connection in self.transitions[state]:
+                new_state = ','.join(sorted(list(state)))
+                child = ','.join(sorted(
+                    list(self.transitions[state][connection])))
+                transitions[new_state] = {}
+                transitions[new_state][connection] = child
+
+        for state in self.final_states:
+            new_state = ','.join(sorted(list(state)))
+            final_states.add(new_state)
+        
+        self.transitions = transitions
+        self.final_states = final_states
+        
+
+
+
+    
     def to_dfa(self):
         '''
         makes automat deterministic
