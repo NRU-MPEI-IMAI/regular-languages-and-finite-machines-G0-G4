@@ -73,10 +73,11 @@ class Automat:
                     self.transitions[state][connection])
         return new_connections
 
-    def stringify(self):
+    def __stringify(self):
         '''
-        transforms states in transitions dict to stirngs
-        transforms final states to string
+        transforms states in transitions dict to stirngs.
+        Children are transformed into sets of one string.
+        transforms final states to strings
         '''
         transitions = {}
         final_states = set()
@@ -86,7 +87,7 @@ class Automat:
                 child = ','.join(sorted(
                     list(self.transitions[state][connection])))
                 transitions[new_state] = {}
-                transitions[new_state][connection] = child
+                transitions[new_state][connection] = {child}
 
         for state in self.final_states:
             new_state = ','.join(sorted(list(state)))
@@ -95,10 +96,6 @@ class Automat:
         self.transitions = transitions
         self.final_states = final_states
         
-
-
-
-    
     def to_dfa(self):
         '''
         makes automat deterministic
