@@ -86,7 +86,8 @@ class Automat:
                 new_state = ','.join(sorted(list(state)))
                 child = ','.join(sorted(
                     list(self.transitions[state][connection])))
-                transitions[new_state] = {}
+                if new_state not in transitions:
+                    transitions[new_state] = {}
                 transitions[new_state][connection] = {child}
 
         for state in self.final_states:
