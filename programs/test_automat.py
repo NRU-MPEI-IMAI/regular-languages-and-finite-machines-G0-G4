@@ -121,20 +121,100 @@ class TestAutomat(unittest.TestCase):
             alphabet={'a', 'b'},
             states={'1', '2', '3', '4', '5'},
             transitions={
-                '1': {'a': {'2', '3', '4'}, 'b':'3'},
+                '1': {'a': {'2', '3', '4'}, 'b': '3'},
                 '4': {'a': {'3', '5'}, 'b': '2'}
             },
             initial_state='1',
             final_states={'5'}
         )
 
-        right_a14 = {frozenset({'4', '1'}):{
-            'a':{'3', '4', '2', '5'},
-            'b':{'2', '3'}}}
+        right_a14 = {frozenset({'4', '1'}): {
+            'a': {'3', '4', '2', '5'},
+            'b': {'2', '3'}}}
 
-        right_a235 = {frozenset({'2', '3', '5'}):{}}
+        right_a235 = {frozenset({'2', '3', '5'}): {}}
         self.assertDictEqual(right_a14, a._Automat__dfa_connection({'1', '4'}))
-        self.assertDictEqual(right_a235, a._Automat__dfa_connection({'2', '3', '5'}))
+        self.assertDictEqual(
+            right_a235, a._Automat__dfa_connection({'2', '3', '5'}))
+
+    def test_to_dfa(self):
+        '''
+        a:
+
+        +->5--a->6--b->7--a->8-l+
+        l                       v
+        1<----------l---------->9-a>10!
+        l                       ^
+        +->2--a->3--b->4 ------l+
+
+        b:
+
+        +-a,b->1-a,b-+
+        |            |
+        |            v
+        0!<----b-----2
+        ^
+        a
+        '''
+
+        a = Automat(
+            states={'1', '2', '3', '4', '5', '6', '7', '8', '9', '10'},
+            alphabet={'a', 'b'},
+            transitions={
+                '1': {'': {'2', '5', '9'}},
+                '2': {'a': {'3'}},
+                '3': {'b': {'4'}},
+                '4': {'': {'9'}},
+                '5': {'a': {'6'}},
+                '6': {'b': {'7'}},
+                '7': {'a': {'8'}},
+                '8': {'': {'9'}},
+                '9': {'': {'1'}, 'a': {'10'}},
+                '10': {}
+            },
+            initial_state='1',
+            final_states={'10'}
+        )
+
+        b = Automat(
+            states={'0', '1', '2'},
+            alphabet={'a', 'b'},
+            transitions={
+                '0': {'a': {'0', '1'}, 'b': {'1'}},
+                '1': {'a': {'2'}, 'b': {'2'}},
+                '2': {'b': {'0'}},
+            },
+            initial_state='0',
+            final_states={'0'}
+        )
+        right_a_transitions = {
+            '1': {'a': {'10,3,6'}},
+            '10,3,6': {'b': {'4,7'}},
+            '4,7': {'a': {'10,3,6,8'}},
+            '10,3,6,8': {'b': {'4,7'}, 'a': {'10,3,6'}}
+        }
+        right_a_final_states = {'10,3,6', '10,3,6,8'}
+
+        right_b_transitions = {
+            '0': {'a': {'0,1'}, 'b': {'1'}},
+            '0,1': {'a': {'0,1,2'}, 'b': {'1,2'}},
+            '1': {'a': {'2'}, 'b': {'2'}},
+            '0,1,2': {'a': {'0,1,2'}, 'b': {'0,1,2'}},
+            '1,2': {'b': {'0,2'}, 'a': {'2'}},
+            '2': {'b': {'0'}},
+            '0,2': {'a': {'0,1'},
+                    'b': {'0,1'}}
+        }
+        right_b_final_states = {'0', '0,2', '0,1,2', '0,1'}
+
+        a_transitions, a_final_states = a.to_dfa()
+        b_transitions, b_final_states = b.to_dfa()
+
+        self.assertDictEqual(right_a_transitions, a_transitions)
+        self.assertEqual(right_a_final_states, a_final_states)
+        self.assertDictEqual(right_b_transitions, b_transitions)
+        self.assertEqual(right_b_final_states, b_final_states)
+
 
 if __name__ == '__main__':
     unittest.main()
