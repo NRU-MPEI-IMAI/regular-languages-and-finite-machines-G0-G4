@@ -122,4 +122,5 @@ class Automat:
                         new_final_states.add(state)
         self.transitions = new_connections
         self.final_states = new_final_states
+        self.__stringify()
         return new_connections, new_final_states
