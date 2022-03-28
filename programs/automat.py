@@ -104,7 +104,7 @@ class Automat:
         self.remove_lambda_connections()
         queue = deque()
         visited = set()
-        self.initial_state = frozenset(self.initial_state)
+        self.initial_state = frozenset({self.initial_state})
         queue.append(self.initial_state)
         new_connections = {}
         new_final_states = set()
