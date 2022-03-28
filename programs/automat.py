@@ -94,6 +94,7 @@ class Automat:
 
         self.transitions = transitions
         self.final_states = final_states
+        self.initial_state = ','.join(sorted(list(self.initial_state)))
 
     def to_dfa(self):
         '''
@@ -132,12 +133,13 @@ class Automat:
         with open(file, 'w') as f:
             f.write('digraph {\n')
             f.write('rankdir = LR\n')
-            f.write(f'{self.initial_state} [ color = "#808080", shape = circle];\n')
-            f.write(f'{",".join(self.final_states)} [shape = doublecircle];\n')
+            if self.initial_state:
+                f.write(f'{self.initial_state} [ color = "#808080", shape = circle];\n')
+            if self.final_states:
+                f.write(f'{",".join(self.final_states)} [shape = doublecircle];\n')
             f.write('node [shape = circle];\n')
             for state in self.transitions:
                 for connection in self.transitions[state]:
                     for child in self.transitions[state][connection]:
                         f.write(f'{state} -> {child} [label = "{connection}"];\n')
             f.write('}')
-            
