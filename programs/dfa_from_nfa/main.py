@@ -1,5 +1,7 @@
 import os
 import sys
+sys.path.append("../automat")
+print(sys.path)
 from automat import Automat
 from input import transitions, initial_state, final_states
 
