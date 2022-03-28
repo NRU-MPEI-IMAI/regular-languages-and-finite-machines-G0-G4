@@ -40,8 +40,6 @@ class TestAutomat(unittest.TestCase):
 
         '''
         a = Automat(
-            alphabet={'a', 'b'},
-            states={'1', '2'},
             transitions={
                 '1': {'': {'2'}},
                 '2': {'': {'1'}}
@@ -51,8 +49,6 @@ class TestAutomat(unittest.TestCase):
         )
 
         b = Automat(
-            alphabet={'a', 'b'},
-            states={'1', '2', '3', '4', '5', '6'},
             transitions={
                 '1': {'': {'2', '3'}},
                 '2': {'a': {'2'}, 'b': {'4'}},
@@ -66,8 +62,6 @@ class TestAutomat(unittest.TestCase):
         )
 
         c = Automat(
-            alphabet={'a', 'b'},
-            states={'1', '2', '3', '4'},
             transitions={
                 '1': {'': {'2'}, 'a': {'1'}, 'b': {'2'}},
                 '2': {'': {'3'}, 'a': {'4'}, 'b': {'3'}},
@@ -118,8 +112,6 @@ class TestAutomat(unittest.TestCase):
         '''
 
         a = Automat(
-            alphabet={'a', 'b'},
-            states={'1', '2', '3', '4', '5'},
             transitions={
                 '1': {'a': {'2', '3', '4'}, 'b': '3'},
                 '4': {'a': {'3', '5'}, 'b': '2'}
@@ -158,8 +150,6 @@ class TestAutomat(unittest.TestCase):
         '''
 
         a = Automat(
-            states={'1', '2', '3', '4', '5', '6', '7', '8', '9', '10'},
-            alphabet={'a', 'b'},
             transitions={
                 '1': {'': {'2', '5', '9'}},
                 '2': {'a': {'3'}},
@@ -177,8 +167,6 @@ class TestAutomat(unittest.TestCase):
         )
 
         b = Automat(
-            states={'0', '1', '2'},
-            alphabet={'a', 'b'},
             transitions={
                 '0': {'a': {'0', '1'}, 'b': {'1'}},
                 '1': {'a': {'2'}, 'b': {'2'}},
