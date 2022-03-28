@@ -20,3 +20,10 @@ if __name__ == '__main__':
     os.system('dot -Tpng 1.dot -o 1.png')
     os.system('dot -Tpng 2.dot -o 2.png')
     os.system('dot -Tpng 3.dot -o 3.png')
+
+    with open('result.md', 'w')as f:
+        f.write('![](1.png)\n')
+        f.write('![](2.png)\n')
+        f.write('![](3.png)\n')
+
+
