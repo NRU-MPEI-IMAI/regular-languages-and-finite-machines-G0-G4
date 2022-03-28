@@ -77,24 +77,25 @@ class Automat:
         Children are transformed into sets of one string.
         transforms final states to strings
         '''
+        delim = ','
         transitions = {}
         final_states = set()
         for state in self.transitions:
             for connection in self.transitions[state]:
-                new_state = ','.join(sorted(list(state)))
-                child = ','.join(sorted(
-                    list(self.transitions[state][connection])))
+                new_state = '"' + delim.join(sorted(list(state))) + '"'
+                child = '"' + delim.join(sorted(
+                    list(self.transitions[state][connection]))) + '"'
                 if new_state not in transitions:
                     transitions[new_state] = {}
                 transitions[new_state][connection] = {child}
 
         for state in self.final_states:
-            new_state = ','.join(sorted(list(state)))
+            new_state = '"' + delim.join(sorted(list(state))) + '"'
             final_states.add(new_state)
 
         self.transitions = transitions
         self.final_states = final_states
-        self.initial_state = ','.join(sorted(list(self.initial_state)))
+        self.initial_state = '"' + delim.join(sorted(list(self.initial_state))) + '"'
 
     def to_dfa(self):
         '''
