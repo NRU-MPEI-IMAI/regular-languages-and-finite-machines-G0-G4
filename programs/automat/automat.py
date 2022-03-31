@@ -268,3 +268,17 @@ class Automat:
         )
         result.__stringify()
         return result
+
+    def __invert__(self):
+        '''
+        dfa complement
+        '''
+
+        return Automat(
+            alphabet=self.alphabet.copy(),
+            states=self.states.copy(),
+            transitions=self.transitions.copy(),
+            initial_state=self.initial_state,
+            final_states=self.states - self.final_states,
+            deterministic=True
+        )

@@ -447,6 +447,47 @@ class TestAutomat(unittest.TestCase):
         self.assertEqual(c_and_d.final_states, cd.final_states)
         self.assertEqual(c_and_d.deterministic, cd.deterministic)
 
+    def test_invert(self):
+        a = Automat(
+            alphabet = {'a', 'b'},
+            states = {'A', 'B', 'C'},
+            transitions = {
+                'A': {'a': 'B', 'b': 'A'},
+                'B': {'a': 'C', 'b': {'B'}},
+                'C': {'a': {'C'}, 'b': 'C'}
+            },
+            initial_state = 'A',
+            final_states = {'C'},
+            deterministic = True
+        )
+        c = Automat(
+            alphabet = {'a'},
+            states = {'q1'},
+            transitions = {
+                'q1': {'a': 'q1'},
+            },
+            initial_state = 'q1',
+            final_states = {'q1'},
+            deterministic = True
+        )
+        na = ~a
+        nc = ~c   
+
+        self.assertEqual(na.alphabet, a.alphabet)
+        self.assertEqual(na.states, a.states)
+        self.assertDictEqual(na.transitions, a.transitions)
+        self.assertEqual(na.initial_state, a.initial_state)
+        self.assertEqual(na.final_states, {'A', 'B'})
+        self.assertEqual(na.deterministic, a.deterministic)
+
+        self.assertEqual(nc.alphabet, c.alphabet)
+        self.assertEqual(nc.states, c.states)
+        self.assertDictEqual(nc.transitions, c.transitions)
+        self.assertEqual(nc.initial_state, c.initial_state)
+        self.assertEqual(nc.final_states, set())
+        self.assertEqual(nc.deterministic, c.deterministic)
+
+
 
 
 
