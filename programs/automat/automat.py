@@ -329,25 +329,33 @@ class Automat:
                 new_transitions['_'][letter] = '_'
         return new_transitions, full
 
-    
+
     def __invert__(self):
         '''
         dfa complement
         '''
+        if not Automat.is_deterministic(self):
+            raise TypeError('"~" could be applied only to dfa')
+        ts, full = Automat.__full_transitions(
+            self.states,
+            self.alphabet,
+            self.transitions)
         new_states = self.states.copy()
-        new_final_states = (self.states - self.final_states)
-        new_states.add('_')
-        new_final_states.add('_')
+        new_transitions = self.transitions.copy()
+        if not full:
+            new_transitions = ts
+            new_states.add('_')
+        new_final_states = (new_states - self.final_states)
+
         result = Automat(
             alphabet=self.alphabet.copy(),
             states=new_states,
-            transitions=Automat.__full_transitions(self.states, self.alphabet,
-                self.transitions),
+            transitions=new_transitions,
             initial_state=self.initial_state,
             final_states=new_final_states,
             deterministic=True
         )
-        result.__stringify()
+        # result.__stringify()
         return result
 
     @staticmethod
