@@ -13,13 +13,12 @@ class Automat:
     '''
 
     def __init__(self, alphabet, states, transitions,
-                 initial_state, final_states, deterministic):
+                 initial_state, final_states):
         self.alphabet = alphabet
         self.states = states
         self.transitions = transitions
         self.initial_state = initial_state
         self.final_states = final_states
-        self.deterministic = deterministic
 
     def __lambda_connections(self, start, state, visited,
                              new_connections, new_final_states):
@@ -140,7 +139,6 @@ class Automat:
         self.transitions = new_connections
         self.final_states = new_final_states
         self.__stringify()
-        self.deterministic = True
         return self.transitions, self.final_states
 
     def save_dot(self, file):
@@ -270,7 +268,6 @@ class Automat:
             new_transitions,
             new_initial_state,
             new_final_states,
-            deterministic=True
         )
         result.__stringify()
         return result
@@ -317,7 +314,6 @@ class Automat:
             new_transitions,
             new_initial_state,
             new_final_states,
-            deterministic=True
         )
         result.__stringify()
         return result
@@ -369,7 +365,6 @@ class Automat:
             transitions=new_transitions,
             initial_state=self.initial_state,
             final_states=new_final_states,
-            deterministic=True
         )
         # result.__stringify()
         return result

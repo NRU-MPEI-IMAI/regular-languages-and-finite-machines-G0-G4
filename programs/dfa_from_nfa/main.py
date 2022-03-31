@@ -11,7 +11,6 @@ if __name__ == '__main__':
         transitions=transitions,
         initial_state=initial_state,
         final_states=final_states,
-        deterministic=False
     )
 
     if len(sys.argv) > 1:

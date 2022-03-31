@@ -48,7 +48,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state='1',
             final_states={'2'},
-            deterministic=False
         )
 
         b = Automat(
@@ -64,7 +63,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state='1',
             final_states={'6'},
-            deterministic=False
         )
 
         c = Automat(
@@ -77,7 +75,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state='1',
             final_states={'4'},
-            deterministic=False
         )
 
         a_transitions, a_finals = a.remove_lambda_connections()
@@ -129,7 +126,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state='1',
             final_states={'5'},
-            deterministic=False
         )
 
         right_a14 = {frozenset({'4', '1'}): {
@@ -178,7 +174,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state='1',
             final_states={'10'},
-            deterministic=False
         )
 
         b = Automat(
@@ -191,7 +186,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state='0',
             final_states={'0'},
-            deterministic=False
         )
         right_a_transitions = {
             '"1"': {'a': {'"10,3,6"'}},
@@ -287,7 +281,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state = 'A',
             final_states = {'C'},
-            deterministic = True
         )
         b = Automat(
             alphabet = {'a', 'b'},
@@ -299,7 +292,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state = 'D',
             final_states = {'F'},
-            deterministic = True
         )
         c = Automat(
             alphabet = {'a'},
@@ -309,7 +301,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state = 'q1',
             final_states = {'q1'},
-            deterministic = True
         )
         d = Automat(
             alphabet = {'b'},
@@ -319,7 +310,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state = 'g1',
             final_states = {'g1'},
-            deterministic = True
         )
         e = Automat(
             alphabet = {'a', 'b'},
@@ -332,7 +322,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state = 'A',
             final_states = {'D'},
-            deterministic = True
         )
         f = Automat(
             alphabet = {'a', 'b'},
@@ -343,7 +332,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state = 'E',
             final_states = {'F'},
-            deterministic = True
         )
         ab = a & b
         cd = c & d
@@ -364,7 +352,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state = 'AD',
             final_states = {'CF'},
-            deterministic = True
         )
         c_and_d = Automat(
             alphabet = {'a', 'b'},
@@ -376,7 +363,6 @@ class TestAutomat(unittest.TestCase):
                 'q1g1': {'a': {'q1_'}, 'b': {'_g1'}}},
             initial_state = 'q1g1',
             final_states = {'q1g1'},
-            deterministic = True
         )
         e_and_f = Automat(
             alphabet = {'a', 'b'},
@@ -393,28 +379,24 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state = 'AE',
             final_states = {'DF'},
-            deterministic = True
         )
         self.assertEqual(a_and_b.alphabet, ab.alphabet)
         self.assertEqual(a_and_b.states, ab.states)
         self.assertDictEqual(a_and_b.transitions, ab.transitions)
         self.assertEqual(a_and_b.initial_state, ab.initial_state)
         self.assertEqual(a_and_b.final_states, ab.final_states)
-        self.assertEqual(a_and_b.deterministic, ab.deterministic)
 
         self.assertEqual(c_and_d.alphabet, cd.alphabet)
         self.assertEqual(c_and_d.states, cd.states)
         self.assertDictEqual(c_and_d.transitions, cd.transitions)
         self.assertEqual(c_and_d.initial_state, cd.initial_state)
         self.assertEqual(c_and_d.final_states, cd.final_states)
-        self.assertEqual(c_and_d.deterministic, cd.deterministic)
 
         self.assertEqual(e_and_f.alphabet, ef.alphabet)
         self.assertEqual(e_and_f.states, ef.states)
         self.assertDictEqual(e_and_f.transitions, ef.transitions)
         self.assertEqual(e_and_f.initial_state, ef.initial_state)
         self.assertEqual(e_and_f.final_states, ef.final_states)
-        self.assertEqual(e_and_f.deterministic, ef.deterministic)
 
     def test_or(self):
         a = Automat(
@@ -427,7 +409,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state = 'A',
             final_states = {'C'},
-            deterministic = True
         )
         b = Automat(
             alphabet = {'a', 'b'},
@@ -439,7 +420,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state = 'D',
             final_states = {'F'},
-            deterministic = True
         )
         c = Automat(
             alphabet = {'a'},
@@ -449,7 +429,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state = 'q1',
             final_states = {'q1'},
-            deterministic = True
         )
         d = Automat(
             alphabet = {'b'},
@@ -459,7 +438,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state = 'g1',
             final_states = {'g1'},
-            deterministic = True
         )
         ab = a | b
         cd = c | d
@@ -479,7 +457,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state = 'AD',
             final_states = {'CD', 'CE', 'CF', 'AF', 'BF'},
-            deterministic = True
         )
         c_or_d = Automat(
             alphabet = {'a', 'b'},
@@ -491,7 +468,6 @@ class TestAutomat(unittest.TestCase):
                 'q1g1': {'a': {'q1_'}, 'b': {'_g1'}}},
             initial_state = 'q1g1',
             final_states = {'q1g1', 'q1_', '_g1'},
-            deterministic = True
         )
         cd.save_dot('cd.dot')
         self.assertEqual(a_or_b.alphabet, ab.alphabet)
@@ -499,14 +475,12 @@ class TestAutomat(unittest.TestCase):
         self.assertDictEqual(a_or_b.transitions, ab.transitions)
         self.assertEqual(a_or_b.initial_state, ab.initial_state)
         self.assertEqual(a_or_b.final_states, ab.final_states)
-        self.assertEqual(a_or_b.deterministic, ab.deterministic)
 
         self.assertEqual(c_or_d.alphabet, cd.alphabet)
         self.assertEqual(c_or_d.states, cd.states)
         self.assertDictEqual(c_or_d.transitions, cd.transitions)
         self.assertEqual(c_or_d.initial_state, cd.initial_state)
         self.assertEqual(c_or_d.final_states, cd.final_states)
-        self.assertEqual(c_or_d.deterministic, cd.deterministic)        
     
     def test_invert(self):
         a = Automat(
@@ -519,7 +493,6 @@ class TestAutomat(unittest.TestCase):
             },
             initial_state = 'A',
             final_states = {'C'},
-            deterministic = True
         )
         b = Automat(
             alphabet = {'a', 'b'},
@@ -530,7 +503,6 @@ class TestAutomat(unittest.TestCase):
                 },
             initial_state = 'A',
             final_states = {'C'},
-            deterministic = True
         )
         c = Automat(
             alphabet = {'a'},
@@ -539,7 +511,6 @@ class TestAutomat(unittest.TestCase):
                 'q1': {'a': {'q1'}}},
             initial_state = 'q1',
             final_states = {'q1'},
-            deterministic = True
         )
 
         na = ~a
@@ -553,14 +524,12 @@ class TestAutomat(unittest.TestCase):
             })
         self.assertEqual(na.initial_state, a.initial_state)
         self.assertEqual(na.final_states, {'A', 'B'})
-        self.assertEqual(na.deterministic, a.deterministic)
 
         self.assertEqual(nc.alphabet, c.alphabet)
         self.assertEqual(nc.states, c.states)
         self.assertDictEqual(nc.transitions, {'q1': {'a': {'q1'}}})
         self.assertEqual(nc.initial_state, c.initial_state)
         self.assertEqual(nc.final_states, set())
-        self.assertEqual(nc.deterministic, c.deterministic)
 
         with self.assertRaises(TypeError):
             ~b
