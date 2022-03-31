@@ -447,6 +447,23 @@ class TestAutomat(unittest.TestCase):
         self.assertEqual(c_and_d.final_states, cd.final_states)
         self.assertEqual(c_and_d.deterministic, cd.deterministic)
 
+    def test_full_transitions(self):
+
+        alphabet = {'a', 'b'}
+        transitions = {
+            '1': {'a': '1'},
+            '2': {'b': '2'}
+        }
+        full = Automat._Automat__full_transitions({'1', '2'}, {'a', 'b'},
+            transitions)
+        full_right = {
+            '1': {'a':'1', 'b':'@'},
+            '2': {'a':'@', 'b':'2'},
+            '@' : {'a':'@', 'b':'@'}
+        }
+        self.assertDictEqual(full, full_right)
+        
+    
     def test_invert(self):
         a = Automat(
             alphabet = {'a', 'b'},
@@ -472,19 +489,26 @@ class TestAutomat(unittest.TestCase):
         )
         na = ~a
         nc = ~c   
-
+        print(na.transitions)
         self.assertEqual(na.alphabet, a.alphabet)
-        self.assertEqual(na.states, a.states)
-        self.assertDictEqual(na.transitions, a.transitions)
+        self.assertEqual(na.states, a.states | {'@'})
+        self.assertDictEqual(na.transitions, {
+                'A': {'a': {'B'}, 'b': {'A'}},
+                'B': {'a': {'C'}, 'b': {'B'}},
+                'C': {'a': {'C'}, 'b': {'C'}},
+                '@': {'a':{'@'}, 'b':{'@'}}})
         self.assertEqual(na.initial_state, a.initial_state)
-        self.assertEqual(na.final_states, {'A', 'B'})
+        self.assertEqual(na.final_states, {'A', 'B', '@'})
         self.assertEqual(na.deterministic, a.deterministic)
 
         self.assertEqual(nc.alphabet, c.alphabet)
-        self.assertEqual(nc.states, c.states)
-        self.assertDictEqual(nc.transitions, c.transitions)
+        self.assertEqual(nc.states, c.states | {'@'})
+        self.assertDictEqual(nc.transitions, {
+                'q1': {'a': {'q1'}},
+                '@': {'a':{'@'}}
+            })
         self.assertEqual(nc.initial_state, c.initial_state)
-        self.assertEqual(nc.final_states, set())
+        self.assertEqual(nc.final_states, {'@'})
         self.assertEqual(nc.deterministic, c.deterministic)
 
 

@@ -269,16 +269,39 @@ class Automat:
         result.__stringify()
         return result
 
+    @staticmethod
+    def __full_transitions(states, alphabet, transitions):
+        new_transitions = defaultdict(dict)
+        for state in states:
+            for letter in alphabet:
+                if state in transitions and letter in transitions[state]:
+                    if isinstance(transitions[state][letter], set):
+                        new_transitions[state][letter] = tuple(transitions[state][letter])[0]
+                    else:
+                        new_transitions[state][letter] = transitions[state][letter]
+                else:
+                    new_transitions[state][letter] = '@'
+        for letter in alphabet:
+            new_transitions['@'][letter] = '@'
+        return new_transitions
+
+    
     def __invert__(self):
         '''
         dfa complement
         '''
-
-        return Automat(
+        new_states = self.states.copy()
+        new_final_states = (self.states - self.final_states)
+        new_states.add('@')
+        new_final_states.add('@')
+        result = Automat(
             alphabet=self.alphabet.copy(),
-            states=self.states.copy(),
-            transitions=self.transitions.copy(),
+            states=new_states,
+            transitions=Automat.__full_transitions(self.states, self.alphabet,
+                self.transitions),
             initial_state=self.initial_state,
-            final_states=self.states - self.final_states,
+            final_states=new_final_states,
             deterministic=True
         )
+        result.__stringify()
+        return result
