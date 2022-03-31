@@ -222,7 +222,7 @@ class Automat:
 
         if not (Automat.is_deterministic(self) and
             Automat.is_deterministic(other)):
-            raise TypeError('only two dfas could be multiplied')
+            raise TypeError('"&" could be applied only to two dfas')
         new_alphabet = self.alphabet | other.alphabet
         ts1, full1 = Automat.__full_transitions(
             self.states,
@@ -267,31 +267,38 @@ class Automat:
         '''
         dfa or dfa
         '''
-        if not (self.deterministic and other.deterministic):
-            raise TypeError('only two dfas could be multiplied')
+        if not (Automat.is_deterministic(self) and
+            Automat.is_deterministic(other)):
+            raise TypeError('"|" could be applied only to two dfas')
         new_alphabet = self.alphabet | other.alphabet
-        transitions1, full1 = Automat.__full_transitions(
+        ts1, full1 = Automat.__full_transitions(
             self.states,
             new_alphabet,
             self.transitions)
-        transitions2, full2 = Automat.__full_transitions(
+        ts2, full2 = Automat.__full_transitions(
             other.states,
             new_alphabet,
             other.transitions)
-        if full1:
-            transitions1 = self.transitions
-        if full2:
-            transitions2 = other.transitions
+        states1 = self.states.copy()
+        states2 = other.states.copy()
+        transitions1 = self.transitions.copy()
+        transitions2 = other.transitions.copy()
+        if not full1:
+            transitions1 = ts1
+            states1.add('_')
+        if not full2:
+            transitions2 = ts2
+            states2.add('_')
         new_transitions = self.__cartesian(
             transitions1,
             transitions2,
-            self.states,
-            other.states,
+            states1,
+            states2,
             new_alphabet)
         new_initial_state = self.initial_state + other.initial_state
-        new_states = Automat.__new_states(self.states, other.states)
+        new_states = Automat.__new_states(states1, states2)
         new_final_states = Automat.__final_state_or(self.final_states,
-            other.final_states, self.states, other.states)
+            other.final_states, states1, states2)
         result = Automat(
             new_alphabet,
             new_states,
