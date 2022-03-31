@@ -2,7 +2,14 @@ from collections import defaultdict, deque
 
 class Automat:
     '''
-    class for representing final state automata
+    class for representing final state automata.
+    Automata = (
+        alphabet = set of chars
+        states = set of strings
+        transitions = dict{state: dict{letter: {set of children} ...} ...}
+        initial_state = string
+        final_states = set of strings
+    )
     '''
 
     def __init__(self, alphabet, states, transitions,
@@ -17,11 +24,11 @@ class Automat:
     def __lambda_connections(self, start, state, visited,
                              new_connections, new_final_states):
         '''
-        searching for lambda reachable states (states that can be reached
+        searches for lambda reachable states (states that can be reached
         by any number of lambda transitions), if start state is in final_states
-        add them to new_final_states.
-        Create connectins for start and children of lambda reachable states.
-        Return this connections and new_final_states
+        adds them to the new_final_states.
+        Create connections between start and children of lambda reachable states.
+        Returns this connections and new_final_states
         '''
         if state in self.transitions:
             for connection in self.transitions[state]:
@@ -57,7 +64,8 @@ class Automat:
 
     def __dfa_connection(self, states):
         '''
-        combines connection from set of states
+        returns new connections for a new state by combining connections
+        of old states
         '''
 
         new_connections = defaultdict(lambda: defaultdict(set))
@@ -73,9 +81,9 @@ class Automat:
 
     def __stringify(self):
         '''
-        transforms states in transitions dict to stirngs.
+        transforms states in transitions dictionaries to stirngs.
         Children are transformed into sets of one string.
-        transforms final states to strings
+        transforms states in "final_states" to strings
         '''
         delim = ','
         transitions = {}
@@ -157,7 +165,7 @@ class Automat:
     @staticmethod
     def __state_child(transitions, state, letter):
         '''
-        function to get child state with connection by letter
+        function to get child of a state
         '''
 
         if state not in transitions or letter not in transitions[state]:
@@ -170,7 +178,7 @@ class Automat:
     @staticmethod
     def __cartesian(transitions1, transitions2, states1, states2, alphabet):
         '''
-        return cartesian product of transitions
+        returns cartesian product of transition tables
         '''
 
         transitions = defaultdict(dict)
@@ -184,6 +192,10 @@ class Automat:
 
     @staticmethod
     def __new_states(states1, states2):
+        '''
+        function to generate new states for the new dfa generate by
+        {&,|,-} operations
+        '''
         new_states = set()
         for st1 in states1:
             for st2 in states2:
@@ -193,7 +205,7 @@ class Automat:
     @staticmethod
     def __final_state(final_states1, final_states2):
         '''
-        helper function to generate final_states after product
+        helper function to generate final_states for dfa = dfa1 & dfa2
         '''
         final_states = set()
         for fs1 in final_states1:
@@ -204,7 +216,7 @@ class Automat:
     @staticmethod
     def __final_state_or(final_states1, final_states2, states1, states2):
         '''
-        helper function to generate final_states after product for or operation
+        helper function to generate final_states for dfa = dfa1 | dfa2
         '''
         final_states = set()
         for fs1 in final_states1:
@@ -217,7 +229,7 @@ class Automat:
 
     def __and__(self, other):
         '''
-        dfa cartesian product
+        dfa and operation
         '''
 
         if not (Automat.is_deterministic(self) and
@@ -265,7 +277,7 @@ class Automat:
 
     def __or__(self, other):
         '''
-        dfa or dfa
+        dfa or operation
         '''
         if not (Automat.is_deterministic(self) and
             Automat.is_deterministic(other)):
@@ -312,6 +324,10 @@ class Automat:
 
     @staticmethod
     def __full_transitions(states, alphabet, transitions):
+        '''
+        returns full transition table, and True if it was already full,
+        False otherwise
+        '''
         new_transitions = defaultdict(dict)
         full = True
         for state in states:
