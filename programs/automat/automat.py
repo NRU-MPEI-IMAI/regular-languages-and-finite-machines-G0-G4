@@ -1,5 +1,5 @@
+from cmath import isinf
 from collections import defaultdict, deque
-
 
 class Automat:
     '''
@@ -83,20 +83,28 @@ class Automat:
         final_states = set()
         for state in self.transitions:
             for connection in self.transitions[state]:
-                new_state = '"' + delim.join(sorted(list(state))) + '"'
-                child = '"' + delim.join(sorted(
-                    list(self.transitions[state][connection]))) + '"'
+                new_state = state
+                if isinstance(state, set) or isinstance(state, frozenset):
+                    new_state = '"' + delim.join(sorted(list(state))) + '"'
+                child = self.transitions[state][connection]
+                if isinstance(child, set) or isinstance(child, frozenset):
+                    child = '"' + delim.join(sorted(
+                        list(child))) + '"'
                 if new_state not in transitions:
                     transitions[new_state] = {}
                 transitions[new_state][connection] = {child}
 
         for state in self.final_states:
-            new_state = '"' + delim.join(sorted(list(state))) + '"'
+            new_state = state
+            if isinstance(new_state, set) or isinstance(new_state, frozenset):
+                new_state = '"' + delim.join(sorted(list(new_state))) + '"'
             final_states.add(new_state)
 
         self.transitions = transitions
         self.final_states = final_states
-        self.initial_state = '"' + delim.join(sorted(list(self.initial_state))) + '"'
+        if (isinstance(self.initial_state, set) or
+            isinstance(self.initial_state, frozenset)):
+            self.initial_state = '"' + delim.join(sorted(list(self.initial_state))) + '"'
 
     def to_dfa(self):
         '''
@@ -210,7 +218,7 @@ class Automat:
         new_states = new_transitions.keys()
         new_final_states = Automat.__final_state(self.final_states,
             other.final_states)
-        return Automat(
+        result = Automat(
             new_alphabet,
             new_states,
             new_transitions,
@@ -218,3 +226,5 @@ class Automat:
             new_final_states,
             deterministic=True
         )
+        result.__stringify()
+        return result

@@ -318,15 +318,15 @@ class TestAutomat(unittest.TestCase):
             alphabet = {'a', 'b'},
             states = {'AD', 'AE', 'AF', 'BD', 'BE', 'BF', 'CD', 'CE', 'CF'},
             transitions = {
-                'AE': {'a': 'BE', 'b': 'AF'},
-                'AF': {'a': 'BF', 'b': 'AF'},
-                'AD': {'a': 'BD', 'b': 'AE'},
-                'CE': {'a': 'CE', 'b': 'CF'},
-                'CF': {'a': 'CF', 'b': 'CF'},
-                'CD': {'a': 'CD', 'b': 'CE'},
-                'BE': {'a': 'CE', 'b': 'BF'},
-                'BF': {'a': 'CF', 'b': 'BF'},
-                'BD': {'a': 'CD', 'b': 'BE'}
+                'AE': {'a': {'BE'}, 'b': {'AF'}},
+                'AF': {'a': {'BF'}, 'b': {'AF'}},
+                'AD': {'a': {'BD'}, 'b': {'AE'}},
+                'CE': {'a': {'CE'}, 'b': {'CF'}},
+                'CF': {'a': {'CF'}, 'b': {'CF'}},
+                'CD': {'a': {'CD'}, 'b': {'CE'}},
+                'BE': {'a': {'CE'}, 'b': {'BF'}},
+                'BF': {'a': {'CF'}, 'b': {'BF'}},
+                'BD': {'a': {'CD'}, 'b': {'BE'}}
             },
             initial_state = 'AD',
             final_states = {'CF'},
@@ -336,13 +336,12 @@ class TestAutomat(unittest.TestCase):
             alphabet = {'a', 'b'},
             states = {'q1g1'},
             transitions = {
-                'q1g1': {'a': '@', 'b': '@'},
+                'q1g1': {'a': {'@'}, 'b': {'@'}},
             },
             initial_state = 'q1g1',
             final_states = {'q1g1'},
             deterministic = True
         )
-        print(cd.transitions)
 
         self.assertEqual(a_and_b.alphabet, ab.alphabet)
         self.assertEqual(a_and_b.states, ab.states)
@@ -357,16 +356,6 @@ class TestAutomat(unittest.TestCase):
         self.assertEqual(c_and_d.initial_state, cd.initial_state)
         self.assertEqual(c_and_d.final_states, cd.final_states)
         self.assertEqual(c_and_d.deterministic, cd.deterministic)
-
-
-
-
-
-        # print(ab.transitions)
-        # for state in ab.transitions:
-        #     print(state + ':', ab.transitions[state])
-        # print(ab.final_states)
-        # print(ab.initial_state)
 
 
 if __name__ == '__main__':
