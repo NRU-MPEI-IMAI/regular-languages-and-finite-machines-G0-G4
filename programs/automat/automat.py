@@ -146,3 +146,75 @@ class Automat:
                     for child in self.transitions[state][connection]:
                         f.write(f'{state} -> {child} [label = "{connection}"];\n')
             f.write('}')
+
+    @staticmethod
+    def __state_child(transitions, state, letter):
+        '''
+        function to get child state with connection by letter
+        '''
+
+        if state not in transitions or letter not in transitions[state]:
+            return None
+        return transitions[state][letter]
+    
+    @staticmethod
+    def __cartesian(transitions1, transitions2, states1, states2, alphabet):
+        '''
+        return cartesian product of transitions
+        '''
+
+        transitions = defaultdict(dict)
+        for st1 in states1:
+            for st2 in states2:
+                for letter in alphabet:
+                    st1_child = Automat.__state_child(transitions1, st1, letter)
+                    st2_child = Automat.__state_child(transitions2, st2, letter)
+                    if not st1_child or not st2_child:
+                        child = '@'
+                    else:
+                        if isinstance(st1_child, set):
+                            st1_child = tuple(st1_child)[0]
+                        if isinstance(st2_child, set):
+                            st2_child = tuple(st2_child)[0]
+                        child = st1_child + st2_child
+                    transitions[st1+st2][letter] = child
+        return transitions
+
+    @staticmethod
+    def __final_state(final_states1, final_states2):
+        '''
+        helper function to generate final_states after product
+        '''
+        final_states = set()
+        for fs1 in final_states1:
+            for fs2 in final_states2:
+                final_states.add(fs1 + fs2)
+        return final_states
+
+
+    def __and__(self, other):
+        '''
+        dfa cartesian product
+        '''
+
+        if not (self.deterministic and other.deterministic):
+            raise TypeError('only two dfas could be multiplied')
+        new_alphabet = self.alphabet | other.alphabet
+        new_transitions = self.__cartesian(
+            self.transitions,
+            other.transitions,
+            self.states,
+            other.states,
+            new_alphabet)
+        new_initial_state = self.initial_state + other.initial_state
+        new_states = new_transitions.keys()
+        new_final_states = Automat.__final_state(self.final_states,
+            other.final_states)
+        return Automat(
+            new_alphabet,
+            new_states,
+            new_transitions,
+            new_initial_state,
+            new_final_states,
+            deterministic=True
+        )
