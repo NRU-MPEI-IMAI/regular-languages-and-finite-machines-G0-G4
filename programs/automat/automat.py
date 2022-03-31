@@ -6,10 +6,10 @@ class Automat:
     class for representing final state automata
     '''
 
-    def __init__(self, transitions,
+    def __init__(self, alphabet, states, transitions,
                  initial_state, final_states):
-        # self.alphabet = alphabet
-        # self.states = states
+        self.alphabet = alphabet
+        self.states = states
         self.transitions = transitions
         self.initial_state = initial_state
         self.final_states = final_states
