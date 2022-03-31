@@ -47,7 +47,8 @@ class TestAutomat(unittest.TestCase):
                 '2': {'': {'1'}}
             },
             initial_state='1',
-            final_states={'2'}
+            final_states={'2'},
+            deterministic=False
         )
 
         b = Automat(
@@ -62,7 +63,8 @@ class TestAutomat(unittest.TestCase):
                 '6': {'': {'1'}}
             },
             initial_state='1',
-            final_states={'6'}
+            final_states={'6'},
+            deterministic=False
         )
 
         c = Automat(
@@ -74,7 +76,8 @@ class TestAutomat(unittest.TestCase):
                 '4': {'': {'1'}}
             },
             initial_state='1',
-            final_states={'4'}
+            final_states={'4'},
+            deterministic=False
         )
 
         a_transitions, a_finals = a.remove_lambda_connections()
@@ -125,7 +128,8 @@ class TestAutomat(unittest.TestCase):
                 '4': {'a': {'3', '5'}, 'b': '2'}
             },
             initial_state='1',
-            final_states={'5'}
+            final_states={'5'},
+            deterministic=False
         )
 
         right_a14 = {frozenset({'4', '1'}): {
@@ -173,7 +177,8 @@ class TestAutomat(unittest.TestCase):
                 '10': {}
             },
             initial_state='1',
-            final_states={'10'}
+            final_states={'10'},
+            deterministic=False
         )
 
         b = Automat(
@@ -185,7 +190,8 @@ class TestAutomat(unittest.TestCase):
                 '2': {'b': {'0'}},
             },
             initial_state='0',
-            final_states={'0'}
+            final_states={'0'},
+            deterministic=False
         )
         right_a_transitions = {
             '"1"': {'a': {'"10,3,6"'}},

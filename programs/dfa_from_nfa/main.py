@@ -10,7 +10,8 @@ if __name__ == '__main__':
         states=states,
         transitions=transitions,
         initial_state=initial_state,
-        final_states=final_states
+        final_states=final_states,
+        deterministic=False
     )
 
     if len(sys.argv) > 1:
