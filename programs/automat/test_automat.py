@@ -188,10 +188,11 @@ class TestAutomat(unittest.TestCase):
             final_states={'0'},
         )
         right_a_transitions = {
-            '"1"': {'a': {'"10,3,6"'}},
-            '"10,3,6"': {'b': {'"4,7"'}},
-            '"4,7"': {'a': {'"10,3,6,8"'}},
-            '"10,3,6,8"': {'b': {'"4,7"'}, 'a': {'"10,3,6"'}}
+            '"1"': {'a': {'"10,3,6"'}, 'b':{'_'}},
+            '"10,3,6"': {'b': {'"4,7"'}, 'a':{'_'}},
+            '"4,7"': {'a': {'"10,3,6,8"'}, 'b':{'_'}},
+            '"10,3,6,8"': {'b': {'"4,7"'}, 'a': {'"10,3,6"'}},
+            '_': {'a':{'_'}, 'b':{'_'}}
         }
         right_a_final_states = {'"10,3,6"', '"10,3,6,8"'}
 
@@ -201,14 +202,15 @@ class TestAutomat(unittest.TestCase):
             '"1"': {'a': {'"2"'}, 'b': {'"2"'}},
             '"0,1,2"': {'a': {'"0,1,2"'}, 'b': {'"0,1,2"'}},
             '"1,2"': {'b': {'"0,2"'}, 'a': {'"2"'}},
-            '"2"': {'b': {'"0"'}},
-            '"0,2"': {'a': {'"0,1"'},
-                    'b': {'"0,1"'}}
+            '"2"': {'b': {'"0"'}, 'a':{'_'}},
+            '"0,2"': {'a': {'"0,1"'},'b': {'"0,1"'}},
+            '_' : {'a':{'_'}, 'b':{'_'}}
         }
         right_b_final_states = {'"0"', '"0,2"', '"0,1,2"', '"0,1"'}
 
         a_transitions, a_final_states = a.to_dfa()
         b_transitions, b_final_states = b.to_dfa()
+
 
         self.assertDictEqual(right_a_transitions, a_transitions)
         self.assertEqual(right_a_final_states, a_final_states)
@@ -469,7 +471,6 @@ class TestAutomat(unittest.TestCase):
             initial_state = 'q1g1',
             final_states = {'q1g1', 'q1_', '_g1'},
         )
-        cd.save_dot('cd.dot')
         self.assertEqual(a_or_b.alphabet, ab.alphabet)
         self.assertEqual(a_or_b.states, ab.states)
         self.assertDictEqual(a_or_b.transitions, ab.transitions)

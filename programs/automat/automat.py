@@ -87,6 +87,7 @@ class Automat:
         delim = ','
         transitions = {}
         final_states = set()
+        states = set()
         for state in self.transitions:
             for connection in self.transitions[state]:
                 new_state = state
@@ -106,8 +107,15 @@ class Automat:
                 new_state = '"' + delim.join(sorted(list(new_state))) + '"'
             final_states.add(new_state)
 
+        for state in self.states:
+            new_state = state
+            if isinstance(new_state, set) or isinstance(new_state, frozenset):
+                new_state = '"' + delim.join(sorted(list(new_state))) + '"'
+            states.add(new_state)
+
         self.transitions = transitions
         self.final_states = final_states
+        self.states = states
         if (isinstance(self.initial_state, set) or
             isinstance(self.initial_state, frozenset)):
             self.initial_state = '"' + delim.join(sorted(list(self.initial_state))) + '"'
@@ -116,7 +124,8 @@ class Automat:
         '''
         makes automat deterministic
         '''
-
+        if Automat.is_deterministic(self):
+            return self.transitions, self.final_states
         self.remove_lambda_connections()
         queue = deque()
         visited = set()
@@ -124,6 +133,8 @@ class Automat:
         queue.append(self.initial_state)
         new_connections = {}
         new_final_states = set()
+        new_states = set()
+        new_states.add(self.initial_state)
         while queue:
             state = queue.popleft()
             connections = self.__dfa_connection(state)
@@ -134,10 +145,18 @@ class Automat:
                 if state not in visited:
                     queue.append(state)
                     visited.add(state)
+                    new_states.add(state)
                     if self.final_states & state:
                         new_final_states.add(state)
         self.transitions = new_connections
         self.final_states = new_final_states
+        self.states = new_states
+        self.__stringify()
+        transitions, full = Automat.__full_transitions(self.states,
+            self.alphabet, self.transitions)
+        if not full:
+            self.transitions = transitions
+            self.states.add('_')
         self.__stringify()
         return self.transitions, self.final_states
 
