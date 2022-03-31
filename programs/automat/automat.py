@@ -220,7 +220,8 @@ class Automat:
         dfa cartesian product
         '''
 
-        if not (self.deterministic and other.deterministic):
+        if not (Automat.is_deterministic(self) and
+            Automat.is_deterministic(other)):
             raise TypeError('only two dfas could be multiplied')
         new_alphabet = self.alphabet | other.alphabet
         ts1, full1 = Automat.__full_transitions(
@@ -341,3 +342,17 @@ class Automat:
         )
         result.__stringify()
         return result
+
+    @staticmethod
+    def is_deterministic(automat):
+        '''
+        checks if the automata is deterministic
+        '''
+        for state in automat.states:
+            if state not in automat.transitions:
+                return False
+            for letter in automat.alphabet:
+                if (letter not in automat.transitions[state] or
+                    len(automat.transitions[state][letter]) > 1):
+                    return False
+        return True
