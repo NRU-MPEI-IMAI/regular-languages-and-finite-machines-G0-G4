@@ -179,8 +179,6 @@ class Automat:
                 for st2 in states2:
                     st1_child = Automat.__state_child(transitions1, st1, letter)
                     st2_child = Automat.__state_child(transitions2, st2, letter)
-                    if not st1_child or not st2_child:
-                        break
                     transitions[st1+st2][letter] = st1_child + st2_child
         return transitions
 
@@ -225,11 +223,29 @@ class Automat:
         if not (self.deterministic and other.deterministic):
             raise TypeError('only two dfas could be multiplied')
         new_alphabet = self.alphabet | other.alphabet
-        new_transitions = self.__cartesian(
-            self.transitions,
-            other.transitions,
+        ts1, full1 = Automat.__full_transitions(
             self.states,
+            new_alphabet,
+            self.transitions)
+        ts2, full2 = Automat.__full_transitions(
             other.states,
+            new_alphabet,
+            other.transitions)
+        states1 = self.states.copy()
+        states2 = other.states.copy()
+        transitions1 = self.transitions.copy()
+        transitions2 = other.transitions.copy()
+        if not full1:
+            transitions1 = ts1
+            states1.add('_')
+        if not full2:
+            transitions2 = ts2
+            states2.add('_')
+        new_transitions = self.__cartesian(
+            transitions1,
+            transitions2,
+            states1,
+            states2,
             new_alphabet)
         new_initial_state = self.initial_state + other.initial_state
         new_states = Automat.__new_states(self.states, other.states)
@@ -253,9 +269,21 @@ class Automat:
         if not (self.deterministic and other.deterministic):
             raise TypeError('only two dfas could be multiplied')
         new_alphabet = self.alphabet | other.alphabet
+        transitions1, full1 = Automat.__full_transitions(
+            self.states,
+            new_alphabet,
+            self.transitions)
+        transitions2, full2 = Automat.__full_transitions(
+            other.states,
+            new_alphabet,
+            other.transitions)
+        if full1:
+            transitions1 = self.transitions
+        if full2:
+            transitions2 = other.transitions
         new_transitions = self.__cartesian(
-            self.transitions,
-            other.transitions,
+            transitions1,
+            transitions2,
             self.states,
             other.states,
             new_alphabet)
@@ -277,6 +305,7 @@ class Automat:
     @staticmethod
     def __full_transitions(states, alphabet, transitions):
         new_transitions = defaultdict(dict)
+        full = True
         for state in states:
             for letter in alphabet:
                 if state in transitions and letter in transitions[state]:
@@ -285,10 +314,12 @@ class Automat:
                     else:
                         new_transitions[state][letter] = transitions[state][letter]
                 else:
-                    new_transitions[state][letter] = '@'
-        for letter in alphabet:
-            new_transitions['@'][letter] = '@'
-        return new_transitions
+                    full = False
+                    new_transitions[state][letter] = '_'
+        if not full:
+            for letter in alphabet:
+                new_transitions['_'][letter] = '_'
+        return new_transitions, full
 
     
     def __invert__(self):
@@ -297,8 +328,8 @@ class Automat:
         '''
         new_states = self.states.copy()
         new_final_states = (self.states - self.final_states)
-        new_states.add('@')
-        new_final_states.add('@')
+        new_states.add('_')
+        new_final_states.add('_')
         result = Automat(
             alphabet=self.alphabet.copy(),
             states=new_states,
