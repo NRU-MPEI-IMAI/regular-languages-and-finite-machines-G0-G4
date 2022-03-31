@@ -162,8 +162,11 @@ class Automat:
 
         if state not in transitions or letter not in transitions[state]:
             return None
-        return transitions[state][letter]
-    
+        child = transitions[state][letter]
+        if isinstance(child, set):
+            child = tuple(child)[0]
+        return child
+
     @staticmethod
     def __cartesian(transitions1, transitions2, states1, states2, alphabet):
         '''
@@ -171,21 +174,23 @@ class Automat:
         '''
 
         transitions = defaultdict(dict)
-        for st1 in states1:
-            for st2 in states2:
-                for letter in alphabet:
+        for letter in alphabet:
+            for st1 in states1:
+                for st2 in states2:
                     st1_child = Automat.__state_child(transitions1, st1, letter)
                     st2_child = Automat.__state_child(transitions2, st2, letter)
                     if not st1_child or not st2_child:
-                        child = '@'
-                    else:
-                        if isinstance(st1_child, set):
-                            st1_child = tuple(st1_child)[0]
-                        if isinstance(st2_child, set):
-                            st2_child = tuple(st2_child)[0]
-                        child = st1_child + st2_child
-                    transitions[st1+st2][letter] = child
+                        break
+                    transitions[st1+st2][letter] = st1_child + st2_child
         return transitions
+
+    @staticmethod
+    def __new_states(states1, states2):
+        new_states = set()
+        for st1 in states1:
+            for st2 in states2:
+                new_states.add(st1+st2)
+        return new_states
 
     @staticmethod
     def __final_state(final_states1, final_states2):
@@ -227,7 +232,7 @@ class Automat:
             other.states,
             new_alphabet)
         new_initial_state = self.initial_state + other.initial_state
-        new_states = new_transitions.keys()
+        new_states = Automat.__new_states(self.states, other.states)
         new_final_states = Automat.__final_state(self.final_states,
             other.final_states)
         result = Automat(
@@ -255,7 +260,7 @@ class Automat:
             other.states,
             new_alphabet)
         new_initial_state = self.initial_state + other.initial_state
-        new_states = new_transitions.keys()
+        new_states = Automat.__new_states(self.states, other.states)
         new_final_states = Automat.__final_state_or(self.final_states,
             other.final_states, self.states, other.states)
         result = Automat(
