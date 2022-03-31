@@ -1,12 +1,13 @@
 import os
 import sys
 sys.path.append("../automat")
-print(sys.path)
 from automat import Automat
-from input import transitions, initial_state, final_states
+from input import alphabet, states, transitions, initial_state, final_states
 
 if __name__ == '__main__':
     a = Automat(
+        alphabet=alphabet,
+        states=states,
         transitions=transitions,
         initial_state=initial_state,
         final_states=final_states
