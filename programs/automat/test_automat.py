@@ -357,6 +357,99 @@ class TestAutomat(unittest.TestCase):
         self.assertEqual(c_and_d.final_states, cd.final_states)
         self.assertEqual(c_and_d.deterministic, cd.deterministic)
 
+    def test_or(self):
+        a = Automat(
+            alphabet = {'a', 'b'},
+            states = {'A', 'B', 'C'},
+            transitions = {
+                'A': {'a': 'B', 'b': 'A'},
+                'B': {'a': 'C', 'b': {'B'}},
+                'C': {'a': {'C'}, 'b': 'C'}
+            },
+            initial_state = 'A',
+            final_states = {'C'},
+            deterministic = True
+        )
+        b = Automat(
+            alphabet = {'a', 'b'},
+            states = {'D', 'E', 'F'},
+            transitions = {
+                'D': {'a': {'D'}, 'b': 'E'},
+                'E': {'a': 'E', 'b': 'F'},
+                'F': {'a': 'F', 'b': {'F'}}
+            },
+            initial_state = 'D',
+            final_states = {'F'},
+            deterministic = True
+        )
+        c = Automat(
+            alphabet = {'a'},
+            states = {'q1'},
+            transitions = {
+                'q1': {'a': 'q1'},
+            },
+            initial_state = 'q1',
+            final_states = {'q1'},
+            deterministic = True
+        )
+        d = Automat(
+            alphabet = {'b'},
+            states = {'g1'},
+            transitions = {
+                'g1': {'b': 'g1'},
+            },
+            initial_state = 'g1',
+            final_states = {'g1'},
+            deterministic = True
+        )
+        ab = a | b
+        cd = c | d
+        a_and_b = Automat(
+            alphabet = {'a', 'b'},
+            states = {'AD', 'AE', 'AF', 'BD', 'BE', 'BF', 'CD', 'CE', 'CF'},
+            transitions = {
+                'AE': {'a': {'BE'}, 'b': {'AF'}},
+                'AF': {'a': {'BF'}, 'b': {'AF'}},
+                'AD': {'a': {'BD'}, 'b': {'AE'}},
+                'CE': {'a': {'CE'}, 'b': {'CF'}},
+                'CF': {'a': {'CF'}, 'b': {'CF'}},
+                'CD': {'a': {'CD'}, 'b': {'CE'}},
+                'BE': {'a': {'CE'}, 'b': {'BF'}},
+                'BF': {'a': {'CF'}, 'b': {'BF'}},
+                'BD': {'a': {'CD'}, 'b': {'BE'}}
+            },
+            initial_state = 'AD',
+            final_states = {'CD', 'CE', 'CF', 'AF', 'BF'},
+            deterministic = True
+        )
+        c_and_d = Automat(
+            alphabet = {'a', 'b'},
+            states = {'q1g1'},
+            transitions = {
+                'q1g1': {'a': {'@'}, 'b': {'@'}},
+            },
+            initial_state = 'q1g1',
+            final_states = {'q1g1'},
+            deterministic = True
+        )
+
+        self.assertEqual(a_and_b.alphabet, ab.alphabet)
+        self.assertEqual(a_and_b.states, ab.states)
+        self.assertDictEqual(a_and_b.transitions, ab.transitions)
+        self.assertEqual(a_and_b.initial_state, ab.initial_state)
+        self.assertEqual(a_and_b.final_states, ab.final_states)
+        self.assertEqual(a_and_b.deterministic, ab.deterministic)
+
+        self.assertEqual(c_and_d.alphabet, cd.alphabet)
+        self.assertEqual(c_and_d.states, cd.states)
+        self.assertDictEqual(c_and_d.transitions, cd.transitions)
+        self.assertEqual(c_and_d.initial_state, cd.initial_state)
+        self.assertEqual(c_and_d.final_states, cd.final_states)
+        self.assertEqual(c_and_d.deterministic, cd.deterministic)
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()

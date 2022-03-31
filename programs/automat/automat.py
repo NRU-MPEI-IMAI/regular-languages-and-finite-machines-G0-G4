@@ -1,4 +1,3 @@
-from cmath import isinf
 from collections import defaultdict, deque
 
 class Automat:
@@ -199,6 +198,19 @@ class Automat:
                 final_states.add(fs1 + fs2)
         return final_states
 
+    @staticmethod
+    def __final_state_or(final_states1, final_states2, states1, states2):
+        '''
+        helper function to generate final_states after product for or operation
+        '''
+        final_states = set()
+        for fs1 in final_states1:
+            for st2 in states2:
+                final_states.add(fs1 + st2)
+        for fs2 in final_states2:
+            for st1 in states1:
+                final_states.add(st1 + fs2)
+        return final_states
 
     def __and__(self, other):
         '''
@@ -218,6 +230,34 @@ class Automat:
         new_states = new_transitions.keys()
         new_final_states = Automat.__final_state(self.final_states,
             other.final_states)
+        result = Automat(
+            new_alphabet,
+            new_states,
+            new_transitions,
+            new_initial_state,
+            new_final_states,
+            deterministic=True
+        )
+        result.__stringify()
+        return result
+
+    def __or__(self, other):
+        '''
+        dfa or dfa
+        '''
+        if not (self.deterministic and other.deterministic):
+            raise TypeError('only two dfas could be multiplied')
+        new_alphabet = self.alphabet | other.alphabet
+        new_transitions = self.__cartesian(
+            self.transitions,
+            other.transitions,
+            self.states,
+            other.states,
+            new_alphabet)
+        new_initial_state = self.initial_state + other.initial_state
+        new_states = new_transitions.keys()
+        new_final_states = Automat.__final_state_or(self.final_states,
+            other.final_states, self.states, other.states)
         result = Automat(
             new_alphabet,
             new_states,
