@@ -1,3 +1,4 @@
+from re import A
 import unittest
 from automat import Automat
 
@@ -534,6 +535,40 @@ class TestAutomat(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             ~b
+
+    def test_minus(self):
+
+        a = Automat(
+            alphabet = {'a'},
+            states = {'A'},
+            transitions = {
+                'A': {'a': {'A'}},
+            },
+            initial_state = 'A',
+            final_states = {'A'},
+        )
+
+        b = Automat(
+            alphabet = {'a'},
+            states = {'A', 'B'},
+            transitions = {
+                'A': {'a': {'B'}},
+                'B': {'a': {'A'}}
+
+            },
+            initial_state = 'A',
+            final_states = {'B'},
+        )
+
+        a_minus_a = a - a
+        a_minus_b = a - b
+        print(a_minus_b.transitions)
+        a_minus_b.save_dot('a_b.dot')
+        self.assertEqual(a_minus_a.final_states, set())
+        self.assertEqual(a_minus_b.final_states, {'AA'})
+        self.assertEqual(a_minus_b.transitions, {'AA': {'a': {'BA'}},
+            'BA': {'a': {'AA'}}})
+
 
 
 

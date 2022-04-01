@@ -388,6 +388,16 @@ class Automat:
         # result.__stringify()
         return result
 
+    def __sub__(self, other):
+        '''
+        dfa - dfa
+        '''
+        if not (Automat.is_deterministic(self) and
+            Automat.is_deterministic(other)):
+            raise TypeError('"-" could be applied only to two dfas')
+
+        return ~other & self
+
     @staticmethod
     def is_deterministic(automat):
         '''
