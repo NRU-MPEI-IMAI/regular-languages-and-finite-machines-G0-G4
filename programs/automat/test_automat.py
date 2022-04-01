@@ -1,4 +1,3 @@
-from re import A
 import unittest
 from automat import Automat
 
@@ -189,11 +188,11 @@ class TestAutomat(unittest.TestCase):
             final_states={'0'},
         )
         right_a_transitions = {
-            '"1"': {'a': {'"10,3,6"'}, 'b':{'_'}},
-            '"10,3,6"': {'b': {'"4,7"'}, 'a':{'_'}},
-            '"4,7"': {'a': {'"10,3,6,8"'}, 'b':{'_'}},
+            '"1"': {'a': {'"10,3,6"'}, 'b': {'_'}},
+            '"10,3,6"': {'b': {'"4,7"'}, 'a': {'_'}},
+            '"4,7"': {'a': {'"10,3,6,8"'}, 'b': {'_'}},
             '"10,3,6,8"': {'b': {'"4,7"'}, 'a': {'"10,3,6"'}},
-            '_': {'a':{'_'}, 'b':{'_'}}
+            '_': {'a': {'_'}, 'b': {'_'}}
         }
         right_a_final_states = {'"10,3,6"', '"10,3,6,8"'}
 
@@ -203,41 +202,40 @@ class TestAutomat(unittest.TestCase):
             '"1"': {'a': {'"2"'}, 'b': {'"2"'}},
             '"0,1,2"': {'a': {'"0,1,2"'}, 'b': {'"0,1,2"'}},
             '"1,2"': {'b': {'"0,2"'}, 'a': {'"2"'}},
-            '"2"': {'b': {'"0"'}, 'a':{'_'}},
-            '"0,2"': {'a': {'"0,1"'},'b': {'"0,1"'}},
-            '_' : {'a':{'_'}, 'b':{'_'}}
+            '"2"': {'b': {'"0"'}, 'a': {'_'}},
+            '"0,2"': {'a': {'"0,1"'}, 'b': {'"0,1"'}},
+            '_': {'a': {'_'}, 'b': {'_'}}
         }
         right_b_final_states = {'"0"', '"0,2"', '"0,1,2"', '"0,1"'}
 
         a_transitions, a_final_states = a.to_dfa()
         b_transitions, b_final_states = b.to_dfa()
 
-
         self.assertDictEqual(right_a_transitions, a_transitions)
         self.assertEqual(right_a_final_states, a_final_states)
         self.assertDictEqual(right_b_transitions, b_transitions)
         self.assertEqual(right_b_final_states, b_final_states)
-    
+
     def test_cartesian(self):
         states1 = {'A', 'B', '_'}
         transitions1 = {
-            'A': {'a': {'B'}, 'b':'_'},
-            'B': {'a': '_', 'b':'_'},
-            '_': {'a': '_', 'b':'_'},
+            'A': {'a': {'B'}, 'b': '_'},
+            'B': {'a': '_', 'b': '_'},
+            '_': {'a': '_', 'b': '_'},
 
         }
         states2 = {'C', 'D', '!'}
         transitions2 = {
-            'C': {'b': 'D', 'a':'!'},
-            'D': {'b': '!', 'a':'!'},
-            '!': {'b': '!', 'a':'!'},
+            'C': {'b': 'D', 'a': '!'},
+            'D': {'b': '!', 'a': '!'},
+            '!': {'b': '!', 'a': '!'},
         }
         transitions3 = {
-            'C': {'a': {'D'}, 'b':'C'},
-            'D': {'a': 'D', 'b':{'C'}}
+            'C': {'a': {'D'}, 'b': 'C'},
+            'D': {'a': 'D', 'b': {'C'}}
         }
         transitions4 = {
-            'E': {'a': 'E', 'b':'E'},
+            'E': {'a': 'E', 'b': 'E'},
         }
 
         transitions1_2 = {
@@ -252,7 +250,7 @@ class TestAutomat(unittest.TestCase):
             'AD': {'a': 'B!', 'b': '_!'}}
 
         transitions3_4 = {
-            'CE': {'a': 'DE', 'b':'CE'},
+            'CE': {'a': 'DE', 'b': 'CE'},
             'DE': {'a': 'DE', 'b': 'CE'},
         }
 
@@ -262,87 +260,87 @@ class TestAutomat(unittest.TestCase):
             states1,
             states2,
             {'a', 'b'}
-            )
+        )
         res3_4 = Automat._Automat__cartesian(
             transitions3,
             transitions4,
             {'C', 'D'},
             {'E'},
             {'a', 'b'}
-            )
+        )
         self.assertEqual(transitions1_2, res1_2)
         # self.assertEqual(transitions1_3, res1_3)
 
     def test_and(self):
         a = Automat(
-            alphabet = {'a', 'b'},
-            states = {'A', 'B', 'C'},
-            transitions = {
+            alphabet={'a', 'b'},
+            states={'A', 'B', 'C'},
+            transitions={
                 'A': {'a': {'B'}, 'b': {'A'}},
                 'B': {'a': {'C'}, 'b': {'B'}},
                 'C': {'a': {'C'}, 'b': {'C'}}
             },
-            initial_state = 'A',
-            final_states = {'C'},
+            initial_state='A',
+            final_states={'C'},
         )
         b = Automat(
-            alphabet = {'a', 'b'},
-            states = {'D', 'E', 'F'},
-            transitions = {
+            alphabet={'a', 'b'},
+            states={'D', 'E', 'F'},
+            transitions={
                 'D': {'a': {'D'}, 'b': {'E'}},
                 'E': {'a': {'E'}, 'b': {'F'}},
                 'F': {'a': {'F'}, 'b': {'F'}}
             },
-            initial_state = 'D',
-            final_states = {'F'},
+            initial_state='D',
+            final_states={'F'},
         )
         c = Automat(
-            alphabet = {'a'},
-            states = {'q1'},
-            transitions = {
+            alphabet={'a'},
+            states={'q1'},
+            transitions={
                 'q1': {'a': {'q1'}},
             },
-            initial_state = 'q1',
-            final_states = {'q1'},
+            initial_state='q1',
+            final_states={'q1'},
         )
         d = Automat(
-            alphabet = {'b'},
-            states = {'g1'},
-            transitions = {
+            alphabet={'b'},
+            states={'g1'},
+            transitions={
                 'g1': {'b': {'g1'}},
             },
-            initial_state = 'g1',
-            final_states = {'g1'},
+            initial_state='g1',
+            final_states={'g1'},
         )
         e = Automat(
-            alphabet = {'a', 'b'},
-            states = {'A', 'B', 'C', 'D'},
-            transitions = {
+            alphabet={'a', 'b'},
+            states={'A', 'B', 'C', 'D'},
+            transitions={
                 'A': {'a': {'B'}, 'b': {'B'}},
                 'B': {'a': {'C'}, 'b': {'C'}},
                 'C': {'a': {'D'}, 'b': {'D'}},
                 'D': {'a': {'D'}, 'b': {'D'}},
             },
-            initial_state = 'A',
-            final_states = {'D'},
+            initial_state='A',
+            final_states={'D'},
         )
         f = Automat(
-            alphabet = {'a', 'b'},
-            states = {'E', 'F'},
-            transitions = {
+            alphabet={'a', 'b'},
+            states={'E', 'F'},
+            transitions={
                 'E': {'a': {'F'}, 'b': {'F'}},
                 'F': {'a': {'E'}, 'b': {'E'}},
             },
-            initial_state = 'E',
-            final_states = {'F'},
+            initial_state='E',
+            final_states={'F'},
         )
         ab = a & b
         cd = c & d
         ef = e & f
         a_and_b = Automat(
-            alphabet = {'a', 'b'},
-            states = {'AD', 'AE', 'AF', 'BD', 'BE', 'BF', 'CD', 'CE', 'CF'},
-            transitions = {
+            alphabet={'a', 'b'},
+            states={'AD', 'AE', 'AF', 'BD', 'BE', 'BF', 'CD', 'CE', 'CF'},
+            transitions={
                 'AE': {'a': {'BE'}, 'b': {'AF'}},
                 'AF': {'a': {'BF'}, 'b': {'AF'}},
                 'AD': {'a': {'BD'}, 'b': {'AE'}},
@@ -353,24 +351,24 @@ class TestAutomat(unittest.TestCase):
                 'BF': {'a': {'CF'}, 'b': {'BF'}},
                 'BD': {'a': {'CD'}, 'b': {'BE'}}
             },
-            initial_state = 'AD',
-            final_states = {'CF'},
+            initial_state='AD',
+            final_states={'CF'},
         )
         c_and_d = Automat(
-            alphabet = {'a', 'b'},
-            states = {'q1g1'},
-            transitions = {
+            alphabet={'a', 'b'},
+            states={'q1g1'},
+            transitions={
                 '__': {'a': {'__'}, 'b': {'__'}},
                 '_g1': {'a': {'__'}, 'b': {'_g1'}},
-                'q1_': {'a': {'q1_'},'b': {'__'}}, 
+                'q1_': {'a': {'q1_'}, 'b': {'__'}},
                 'q1g1': {'a': {'q1_'}, 'b': {'_g1'}}},
-            initial_state = 'q1g1',
-            final_states = {'q1g1'},
+            initial_state='q1g1',
+            final_states={'q1g1'},
         )
         e_and_f = Automat(
-            alphabet = {'a', 'b'},
-            states = {'AE', 'AF', 'BE', 'BF', 'CE', 'CF', 'DE', 'DF'},
-            transitions = {
+            alphabet={'a', 'b'},
+            states={'AE', 'AF', 'BE', 'BF', 'CE', 'CF', 'DE', 'DF'},
+            transitions={
                 'AE': {'a': {'BF'}, 'b': {'BF'}},
                 'BF': {'a': {'CE'}, 'b': {'CE'}},
                 'CE': {'a': {'DF'}, 'b': {'DF'}},
@@ -380,8 +378,8 @@ class TestAutomat(unittest.TestCase):
                 'BE': {'a': {'CF'}, 'b': {'CF'}},
                 'CF': {'a': {'DE'}, 'b': {'DE'}}
             },
-            initial_state = 'AE',
-            final_states = {'DF'},
+            initial_state='AE',
+            final_states={'DF'},
         )
         self.assertEqual(a_and_b.alphabet, ab.alphabet)
         self.assertEqual(a_and_b.states, ab.states)
@@ -403,51 +401,51 @@ class TestAutomat(unittest.TestCase):
 
     def test_or(self):
         a = Automat(
-            alphabet = {'a', 'b'},
-            states = {'A', 'B', 'C'},
-            transitions = {
+            alphabet={'a', 'b'},
+            states={'A', 'B', 'C'},
+            transitions={
                 'A': {'a': {'B'}, 'b': {'A'}},
                 'B': {'a': {'C'}, 'b': {'B'}},
                 'C': {'a': {'C'}, 'b': {'C'}}
             },
-            initial_state = 'A',
-            final_states = {'C'},
+            initial_state='A',
+            final_states={'C'},
         )
         b = Automat(
-            alphabet = {'a', 'b'},
-            states = {'D', 'E', 'F'},
-            transitions = {
+            alphabet={'a', 'b'},
+            states={'D', 'E', 'F'},
+            transitions={
                 'D': {'a': {'D'}, 'b': {'E'}},
                 'E': {'a': {'E'}, 'b': {'F'}},
                 'F': {'a': {'F'}, 'b': {'F'}}
             },
-            initial_state = 'D',
-            final_states = {'F'},
+            initial_state='D',
+            final_states={'F'},
         )
         c = Automat(
-            alphabet = {'a'},
-            states = {'q1'},
-            transitions = {
+            alphabet={'a'},
+            states={'q1'},
+            transitions={
                 'q1': {'a': {'q1'}},
             },
-            initial_state = 'q1',
-            final_states = {'q1'},
+            initial_state='q1',
+            final_states={'q1'},
         )
         d = Automat(
-            alphabet = {'b'},
-            states = {'g1'},
-            transitions = {
+            alphabet={'b'},
+            states={'g1'},
+            transitions={
                 'g1': {'b': {'g1'}},
             },
-            initial_state = 'g1',
-            final_states = {'g1'},
+            initial_state='g1',
+            final_states={'g1'},
         )
         ab = a | b
         cd = c | d
         a_or_b = Automat(
-            alphabet = {'a', 'b'},
-            states = {'AD', 'AE', 'AF', 'BD', 'BE', 'BF', 'CD', 'CE', 'CF'},
-            transitions = {
+            alphabet={'a', 'b'},
+            states={'AD', 'AE', 'AF', 'BD', 'BE', 'BF', 'CD', 'CE', 'CF'},
+            transitions={
                 'AE': {'a': {'BE'}, 'b': {'AF'}},
                 'AF': {'a': {'BF'}, 'b': {'AF'}},
                 'AD': {'a': {'BD'}, 'b': {'AE'}},
@@ -458,19 +456,19 @@ class TestAutomat(unittest.TestCase):
                 'BF': {'a': {'CF'}, 'b': {'BF'}},
                 'BD': {'a': {'CD'}, 'b': {'BE'}}
             },
-            initial_state = 'AD',
-            final_states = {'CD', 'CE', 'CF', 'AF', 'BF'},
+            initial_state='AD',
+            final_states={'CD', 'CE', 'CF', 'AF', 'BF'},
         )
         c_or_d = Automat(
-            alphabet = {'a', 'b'},
-            states = {'q1g1', '__', '_g1', 'q1_'},
-            transitions = {
+            alphabet={'a', 'b'},
+            states={'q1g1', '__', '_g1', 'q1_'},
+            transitions={
                 '__': {'a': {'__'}, 'b': {'__'}},
                 '_g1': {'a': {'__'}, 'b': {'_g1'}},
-                'q1_': {'a': {'q1_'},'b': {'__'}}, 
+                'q1_': {'a': {'q1_'}, 'b': {'__'}},
                 'q1g1': {'a': {'q1_'}, 'b': {'_g1'}}},
-            initial_state = 'q1g1',
-            final_states = {'q1g1', 'q1_', '_g1'},
+            initial_state='q1g1',
+            final_states={'q1g1', 'q1_', '_g1'},
         )
         self.assertEqual(a_or_b.alphabet, ab.alphabet)
         self.assertEqual(a_or_b.states, ab.states)
@@ -483,36 +481,36 @@ class TestAutomat(unittest.TestCase):
         self.assertDictEqual(c_or_d.transitions, cd.transitions)
         self.assertEqual(c_or_d.initial_state, cd.initial_state)
         self.assertEqual(c_or_d.final_states, cd.final_states)
-    
+
     def test_invert(self):
         a = Automat(
-            alphabet = {'a', 'b'},
-            states = {'A', 'B', 'C'},
-            transitions = {
+            alphabet={'a', 'b'},
+            states={'A', 'B', 'C'},
+            transitions={
                 'A': {'a': {'B'}, 'b': {'A'}},
                 'B': {'a': {'C'}, 'b': {'B'}},
                 'C': {'a': {'C'}, 'b': {'C'}}
             },
-            initial_state = 'A',
-            final_states = {'C'},
+            initial_state='A',
+            final_states={'C'},
         )
         b = Automat(
-            alphabet = {'a', 'b'},
-            states = {'A', 'B', 'C'},
-            transitions = {
-                'A': {'a': {'B'}, 'b':{'D'}},
+            alphabet={'a', 'b'},
+            states={'A', 'B', 'C'},
+            transitions={
+                'A': {'a': {'B'}, 'b': {'D'}},
                 'B': {'a': {'C'}, 'b': {'B'}},
-                },
-            initial_state = 'A',
-            final_states = {'C'},
+            },
+            initial_state='A',
+            final_states={'C'},
         )
         c = Automat(
-            alphabet = {'a'},
-            states = {'q1'},
-            transitions = {
+            alphabet={'a'},
+            states={'q1'},
+            transitions={
                 'q1': {'a': {'q1'}}},
-            initial_state = 'q1',
-            final_states = {'q1'},
+            initial_state='q1',
+            final_states={'q1'},
         )
 
         na = ~a
@@ -520,10 +518,10 @@ class TestAutomat(unittest.TestCase):
         self.assertEqual(na.alphabet, a.alphabet)
         self.assertEqual(na.states, a.states)
         self.assertDictEqual(na.transitions, {
-                'A': {'a': {'B'}, 'b': {'A'}},
-                'B': {'a': {'C'}, 'b': {'B'}},
-                'C': {'a': {'C'}, 'b': {'C'}},
-            })
+            'A': {'a': {'B'}, 'b': {'A'}},
+            'B': {'a': {'C'}, 'b': {'B'}},
+            'C': {'a': {'C'}, 'b': {'C'}},
+        })
         self.assertEqual(na.initial_state, a.initial_state)
         self.assertEqual(na.final_states, {'A', 'B'})
 
@@ -539,40 +537,34 @@ class TestAutomat(unittest.TestCase):
     def test_minus(self):
 
         a = Automat(
-            alphabet = {'a'},
-            states = {'A'},
-            transitions = {
+            alphabet={'a'},
+            states={'A'},
+            transitions={
                 'A': {'a': {'A'}},
             },
-            initial_state = 'A',
-            final_states = {'A'},
+            initial_state='A',
+            final_states={'A'},
         )
 
         b = Automat(
-            alphabet = {'a'},
-            states = {'A', 'B'},
-            transitions = {
+            alphabet={'a'},
+            states={'A', 'B'},
+            transitions={
                 'A': {'a': {'B'}},
                 'B': {'a': {'A'}}
 
             },
-            initial_state = 'A',
-            final_states = {'B'},
+            initial_state='A',
+            final_states={'B'},
         )
 
         a_minus_a = a - a
         a_minus_b = a - b
-        print(a_minus_b.transitions)
         a_minus_b.save_dot('a_b.dot')
         self.assertEqual(a_minus_a.final_states, set())
         self.assertEqual(a_minus_b.final_states, {'AA'})
         self.assertEqual(a_minus_b.transitions, {'AA': {'a': {'BA'}},
-            'BA': {'a': {'AA'}}})
-
-
-
-
-
+                                                 'BA': {'a': {'AA'}}})
 
 
 if __name__ == '__main__':

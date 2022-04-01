@@ -1,5 +1,6 @@
 from collections import defaultdict, deque
 
+
 class Automat:
     '''
     class for representing final state automata.
@@ -19,6 +20,115 @@ class Automat:
         self.transitions = transitions
         self.initial_state = initial_state
         self.final_states = final_states
+
+    def to_dfa(self):
+        '''
+        makes automat deterministic
+        '''
+        if Automat.is_deterministic(self):
+            return self.transitions, self.final_states
+        self.remove_lambda_connections()
+        queue = deque()
+        visited = set()
+        self.initial_state = frozenset({self.initial_state})
+        queue.append(self.initial_state)
+        new_connections = {}
+        new_final_states = set()
+        new_states = set()
+        new_states.add(self.initial_state)
+        while queue:
+            state = queue.popleft()
+            connections = self.__dfa_connection(state)
+            new_state = list(connections.keys())[0]
+            new_connections.update(connections)
+            for connection in connections[new_state]:
+                state = frozenset(connections[new_state][connection])
+                if state not in visited:
+                    queue.append(state)
+                    visited.add(state)
+                    new_states.add(state)
+                    if self.final_states & state:
+                        new_final_states.add(state)
+        self.transitions = new_connections
+        self.final_states = new_final_states
+        self.states = new_states
+        self.__stringify()
+        transitions, full = Automat.__full_transitions(self.states,
+                                                       self.alphabet, self.transitions)
+        if not full:
+            self.transitions = transitions
+            self.states.add('_')
+        self.__stringify()
+        return self.transitions, self.final_states
+
+    @staticmethod
+    def is_deterministic(automat):
+        '''
+        checks if the automata is deterministic
+        '''
+        for state in automat.states:
+            if state not in automat.transitions:
+                return False
+            for letter in automat.alphabet:
+                if (letter not in automat.transitions[state] or
+                        len(automat.transitions[state][letter]) > 1):
+                    return False
+        return True
+
+    def save_dot(self, file):
+        '''
+        saves graph to a dot file
+        '''
+
+        with open(file, 'w') as f:
+            f.write('digraph {\n')
+            f.write('rankdir = LR\n')
+            if self.initial_state:
+                f.write(
+                    f'{self.initial_state} [ color = "#808080", shape = circle];\n')
+            if self.final_states:
+                f.write(
+                    f'{",".join(self.final_states)} [shape = doublecircle];\n')
+            f.write('node [shape = circle];\n')
+            for state in self.transitions:
+                for connection in self.transitions[state]:
+                    for child in self.transitions[state][connection]:
+                        f.write(
+                            f'{state} -> {child} [label = "{connection}"];\n')
+            f.write('}')
+
+    def __dfa_connection(self, states):
+        '''
+        returns new connections for a new state by combining connections
+        of old states
+        '''
+
+        new_connections = defaultdict(lambda: defaultdict(set))
+        new_state = frozenset(states)
+        new_connections[new_state]
+        for state in states:
+            if state not in self.transitions:
+                continue
+            for connection in self.transitions[state]:
+                new_connections[new_state][connection].update(
+                    self.transitions[state][connection])
+        return new_connections
+
+    def remove_lambda_connections(self):
+        '''
+        removes lambda connections, modifies transitions and final_states,
+        returns them
+        '''
+
+        all_new_connections = defaultdict(lambda: defaultdict(set))
+        for state in self.transitions:
+            new_connections, new_states = self.__lambda_connections(
+                state, state, set(),
+                defaultdict(lambda: defaultdict(set)), set())
+            self.final_states |= new_states
+            all_new_connections[state].update(new_connections[state])
+        self.transitions = all_new_connections
+        return self.transitions, self.final_states
 
     def __lambda_connections(self, start, state, visited,
                              new_connections, new_final_states):
@@ -44,39 +154,6 @@ class Automat:
                         if connection != '':
                             new_connections[start][connection].add(child)
         return new_connections, new_final_states
-
-    def remove_lambda_connections(self):
-        '''
-        removes lambda connections, modifies transitions and final_states,
-        returns them
-        '''
-
-        all_new_connections = defaultdict(lambda: defaultdict(set))
-        for state in self.transitions:
-            new_connections, new_states = self.__lambda_connections(
-                state, state, set(),
-                defaultdict(lambda: defaultdict(set)), set())
-            self.final_states |= new_states
-            all_new_connections[state].update(new_connections[state])
-        self.transitions = all_new_connections
-        return self.transitions, self.final_states
-
-    def __dfa_connection(self, states):
-        '''
-        returns new connections for a new state by combining connections
-        of old states
-        '''
-
-        new_connections = defaultdict(lambda: defaultdict(set))
-        new_state = frozenset(states)
-        new_connections[new_state]
-        for state in states:
-            if state not in self.transitions:
-                continue
-            for connection in self.transitions[state]:
-                new_connections[new_state][connection].update(
-                    self.transitions[state][connection])
-        return new_connections
 
     def __stringify(self):
         '''
@@ -117,67 +194,9 @@ class Automat:
         self.final_states = final_states
         self.states = states
         if (isinstance(self.initial_state, set) or
-            isinstance(self.initial_state, frozenset)):
-            self.initial_state = '"' + delim.join(sorted(list(self.initial_state))) + '"'
-
-    def to_dfa(self):
-        '''
-        makes automat deterministic
-        '''
-        if Automat.is_deterministic(self):
-            return self.transitions, self.final_states
-        self.remove_lambda_connections()
-        queue = deque()
-        visited = set()
-        self.initial_state = frozenset({self.initial_state})
-        queue.append(self.initial_state)
-        new_connections = {}
-        new_final_states = set()
-        new_states = set()
-        new_states.add(self.initial_state)
-        while queue:
-            state = queue.popleft()
-            connections = self.__dfa_connection(state)
-            new_state = list(connections.keys())[0]
-            new_connections.update(connections)
-            for connection in connections[new_state]:
-                state = frozenset(connections[new_state][connection])
-                if state not in visited:
-                    queue.append(state)
-                    visited.add(state)
-                    new_states.add(state)
-                    if self.final_states & state:
-                        new_final_states.add(state)
-        self.transitions = new_connections
-        self.final_states = new_final_states
-        self.states = new_states
-        self.__stringify()
-        transitions, full = Automat.__full_transitions(self.states,
-            self.alphabet, self.transitions)
-        if not full:
-            self.transitions = transitions
-            self.states.add('_')
-        self.__stringify()
-        return self.transitions, self.final_states
-
-    def save_dot(self, file):
-        '''
-        saves graph to a dot file
-        '''
-
-        with open(file, 'w') as f:
-            f.write('digraph {\n')
-            f.write('rankdir = LR\n')
-            if self.initial_state:
-                f.write(f'{self.initial_state} [ color = "#808080", shape = circle];\n')
-            if self.final_states:
-                f.write(f'{",".join(self.final_states)} [shape = doublecircle];\n')
-            f.write('node [shape = circle];\n')
-            for state in self.transitions:
-                for connection in self.transitions[state]:
-                    for child in self.transitions[state][connection]:
-                        f.write(f'{state} -> {child} [label = "{connection}"];\n')
-            f.write('}')
+                isinstance(self.initial_state, frozenset)):
+            self.initial_state = '"' + \
+                delim.join(sorted(list(self.initial_state))) + '"'
 
     @staticmethod
     def __state_child(transitions, state, letter):
@@ -202,8 +221,10 @@ class Automat:
         for letter in alphabet:
             for st1 in states1:
                 for st2 in states2:
-                    st1_child = Automat.__state_child(transitions1, st1, letter)
-                    st2_child = Automat.__state_child(transitions2, st2, letter)
+                    st1_child = Automat.__state_child(
+                        transitions1, st1, letter)
+                    st2_child = Automat.__state_child(
+                        transitions2, st2, letter)
                     transitions[st1+st2][letter] = st1_child + st2_child
         return transitions
 
@@ -244,13 +265,37 @@ class Automat:
                 final_states.add(st1 + fs2)
         return final_states
 
+    @staticmethod
+    def __full_transitions(states, alphabet, transitions):
+        '''
+        returns full transition table, and True if it was already full,
+        False otherwise
+        '''
+        new_transitions = defaultdict(dict)
+        full = True
+        for state in states:
+            for letter in alphabet:
+                if state in transitions and letter in transitions[state]:
+                    if isinstance(transitions[state][letter], set):
+                        new_transitions[state][letter] = tuple(
+                            transitions[state][letter])[0]
+                    else:
+                        new_transitions[state][letter] = transitions[state][letter]
+                else:
+                    full = False
+                    new_transitions[state][letter] = '_'
+        if not full:
+            for letter in alphabet:
+                new_transitions['_'][letter] = '_'
+        return new_transitions, full
+
     def __and__(self, other):
         '''
         dfa and operation
         '''
 
         if not (Automat.is_deterministic(self) and
-            Automat.is_deterministic(other)):
+                Automat.is_deterministic(other)):
             raise TypeError('"&" could be applied only to two dfas')
         new_alphabet = self.alphabet | other.alphabet
         ts1, full1 = Automat.__full_transitions(
@@ -280,7 +325,7 @@ class Automat:
         new_initial_state = self.initial_state + other.initial_state
         new_states = Automat.__new_states(self.states, other.states)
         new_final_states = Automat.__final_state(self.final_states,
-            other.final_states)
+                                                 other.final_states)
         result = Automat(
             new_alphabet,
             new_states,
@@ -296,7 +341,7 @@ class Automat:
         dfa or operation
         '''
         if not (Automat.is_deterministic(self) and
-            Automat.is_deterministic(other)):
+                Automat.is_deterministic(other)):
             raise TypeError('"|" could be applied only to two dfas')
         new_alphabet = self.alphabet | other.alphabet
         ts1, full1 = Automat.__full_transitions(
@@ -326,7 +371,7 @@ class Automat:
         new_initial_state = self.initial_state + other.initial_state
         new_states = Automat.__new_states(states1, states2)
         new_final_states = Automat.__final_state_or(self.final_states,
-            other.final_states, states1, states2)
+                                                    other.final_states, states1, states2)
         result = Automat(
             new_alphabet,
             new_states,
@@ -336,30 +381,6 @@ class Automat:
         )
         result.__stringify()
         return result
-
-    @staticmethod
-    def __full_transitions(states, alphabet, transitions):
-        '''
-        returns full transition table, and True if it was already full,
-        False otherwise
-        '''
-        new_transitions = defaultdict(dict)
-        full = True
-        for state in states:
-            for letter in alphabet:
-                if state in transitions and letter in transitions[state]:
-                    if isinstance(transitions[state][letter], set):
-                        new_transitions[state][letter] = tuple(transitions[state][letter])[0]
-                    else:
-                        new_transitions[state][letter] = transitions[state][letter]
-                else:
-                    full = False
-                    new_transitions[state][letter] = '_'
-        if not full:
-            for letter in alphabet:
-                new_transitions['_'][letter] = '_'
-        return new_transitions, full
-
 
     def __invert__(self):
         '''
@@ -385,7 +406,6 @@ class Automat:
             initial_state=self.initial_state,
             final_states=new_final_states,
         )
-        # result.__stringify()
         return result
 
     def __sub__(self, other):
@@ -393,21 +413,7 @@ class Automat:
         dfa - dfa
         '''
         if not (Automat.is_deterministic(self) and
-            Automat.is_deterministic(other)):
+                Automat.is_deterministic(other)):
             raise TypeError('"-" could be applied only to two dfas')
 
         return ~other & self
-
-    @staticmethod
-    def is_deterministic(automat):
-        '''
-        checks if the automata is deterministic
-        '''
-        for state in automat.states:
-            if state not in automat.transitions:
-                return False
-            for letter in automat.alphabet:
-                if (letter not in automat.transitions[state] or
-                    len(automat.transitions[state][letter]) > 1):
-                    return False
-        return True
