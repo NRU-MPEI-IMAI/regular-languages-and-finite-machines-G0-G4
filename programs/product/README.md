@@ -1,0 +1,1 @@
+use input.py to input automata, then `python main.py [path to output dir]`
