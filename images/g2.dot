@@ -1,0 +1,22 @@
+digraph G{
+  rankdir=LR;
+  node [shape = doublecircle];02, 12, 22;
+  node [shape = circle];
+  00 [color = "#808080"];
+  00 -> 10 [label = "a"];
+  01 -> 11 [label = "a"];
+  02 -> 12 [label = "a"];
+  10 -> 20 [label = "a"];
+  11 -> 21 [label = "a"];
+  12 -> 22 [label = "a"];
+
+  00 -> 01 [label = "b"];
+  01 -> 02 [label = "b"];     
+  02 -> 02:s [label = "b"];     
+  10 -> 11 [label = "b"];
+  11 -> 12 [label = "b"];
+  12 -> 12:s [label = "b"];
+  20 -> 21 [label = "b"];
+  21 -> 22 [label = "b"];
+  22 -> 22 [label = "b"];
+}

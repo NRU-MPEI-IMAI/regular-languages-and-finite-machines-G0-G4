@@ -1,0 +1,18 @@
+digraph G{
+  rankdir=LR;
+  AD, AE, BC, BD, BE [shape = doublecircle];
+  AC [color = "#808080", shape = circle];
+  AC -> BC [label = "a"];
+  AC -> AD [label = "b"];
+  AD -> BD:n [label = "a"];
+  AD -> AE [label = "b"];
+  AE -> BE [label = "a"];
+  AE -> AC [label = "b"];
+
+  BC -> AC [label = "a"];
+  BC -> BD [label = "b"];
+  BD -> AD [label = "a"];
+  BD -> BE [label = "b"];
+  BE -> AE [label = "a"];
+  BE -> BC [label = "b"];
+}

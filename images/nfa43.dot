@@ -1,0 +1,9 @@
+digraph G{
+  rankdir=LR;
+  0 [ color = "#808080", shape = doublecircle];
+  node [shape = circle];
+  0 -> 0 [label = "a"];
+  0 -> 1 [label = "a, b"];
+  1 -> 2 [label = "a, b"];
+  2 -> 0 [label = "b"];
+}

@@ -1,0 +1,16 @@
+digraph G{
+  rankdir=LR;
+  0 [color = "#808080"];
+  0, 01, 012, 02 [shape = doublecircle];
+  node [shape = circle];
+  0 -> 01 [label = "a"];
+  0 -> 1 [label = "b"];
+  1 -> 2 [label = "a, b"];
+  01 -> 012 [label = "a"];
+  01 -> 12 [label = "b"];
+  012 -> 012 [label = "a, b"];
+  12 -> 2 [label = "a"];
+  12 -> 02 [label = "b"];
+  2 -> 0 [label = "b"];
+  02 -> 01 [label = "a, b"];
+}

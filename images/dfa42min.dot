@@ -1,0 +1,11 @@
+digraph G{
+  rankdir=LR;
+  "{57, 17, 5}" [shape = doublecircle];
+  0 [ color = "#808080", shape = circle];
+  node [shape = circle];
+  0 -> "{57, 17, 5}" [label = "a"];
+  "{57, 17, 5}" -> "{26, 4}" [label = "a"];
+  "{26, 4}" -> "{57, 17, 5}" [label = "b"];
+  "{26, 4}" -> 3 [label = "a"];
+  3 -> "{26, 4}" [label = "b"];
+}
