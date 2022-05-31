@@ -337,16 +337,12 @@
     $$
     
 4.	$L = \{a^kb^ma^n \mid k = n ∨ m > 0\}$
-
     $$
-    \omega = a^nba^n , |\omega| \geq  n \\
-    \omega = xyz \\
-    x = a^i \quad y = a^j \quad i+j \leq n \quad j > 0 \\
-    z = a^{n-i-j}ba^n \\
-    |xy| \leq n \quad |y| > 0 \\
-    xy^kz = a^ia^{jk}a^{n-i-j}ba^n = a^{n-j(k-1)}ba^n \notin L \quad \forall k > 1
+    L = L_1 \cup L_2 \\
+    L_1 = a^{2n}\\
+    L_2 = a^nb^ma^k \quad m > 0\\
     $$
-
+    L может быть представлен, как объединение двух регулярных языков следовательно L - регулярный
 5.	$L = \{ucv \mid u ∈ \{a, b\}^∗, v ∈ \{a, b\}^∗, u \neq v^R\}$
 
     $$
